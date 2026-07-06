@@ -26,17 +26,36 @@ void EnemySpawner::DestroyWaveText(void) {
 	delete waveText->value;
 	Physics::UnSubText(waveText);
 }
-Enemy *EnemySpawner::SpawnEnemy(int type) {
+Enemy *EnemySpawner::SpawnEnemy(int type, FVector2 position) {
+	Enemy* returnVal
+#ifdef DEBUG_BUILD
+		= nullptr
+#endif
+		;
 	switch (type) {
 	case bob:
-		return new SwordGuy();
+		returnVal = new SwordGuy();
+		break;
 	case bat:
-		return new Bat();
+		returnVal = new Bat();
+		break;
 	case ghost:
-		return new Ghost();
+		returnVal = new Ghost();
+		break;
 	case spider:
-		return new Spider();
+		returnVal = new Spider();
+		break;
+	default:
+		ThrowError("unsupported enemy type");
 	}
+#ifdef DEBUG_BUILD
+	if (!returnVal) {
+		ThrowError("return val shouldnt' be null");
+		return nullptr;
+	}
+#endif
+	if (position != FVector2::Infinity) returnVal->rb->SetPosition(position);
+	return returnVal;
 }
 void EnemySpawner::Update(void) {
 	minPlrDist = FLT_MAX;

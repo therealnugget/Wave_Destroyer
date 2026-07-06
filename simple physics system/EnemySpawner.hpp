@@ -23,7 +23,7 @@ private:
 		spider = 8,
 		numEnemyTypes = 4,
 	};
-	inline static Enemy* SpawnEnemy(int type);
+	inline static Enemy* SpawnEnemy(int type, FVector2 position = FVector2::Infinity);
 	static const std::vector<int> enemyTypeProgression;
 	static int progressionIndex;
 	static Node<Enemy*>* enemies;

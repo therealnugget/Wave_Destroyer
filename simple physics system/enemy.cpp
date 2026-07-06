@@ -8,13 +8,19 @@ bool Enemy::isSingleEnemy = true;
 float Enemy::knockBack = 1400.f;
 std::vector<int> Enemy::insigniaTagList;
 const std::unordered_map<int, const char*> Enemy::debuffPaths = { {confused, "question mark/question mark"}, {poisoned, "poison/poison debuff"} };
-Enemy::Enemy(SubRBData data, IntVec2 debugOffset, int max_health, float _damage, float _selfDamage, float _speed, int _numColsOnFrame): frameIndex(0), _debuffActive(0), debugImgOffset(debugOffset), numColsOnFrame(_numColsOnFrame), speed(_speed), damage(_damage), selfDamage(_selfDamage), lateUpdateNode(nullptr), health(max_health), Behaviour(&data) {
+Enemy::Enemy(SubRBData data, IntVec2 debugOffset, int max_health, float _damage, float _selfDamage, float _speed, int _numColsOnFrame, bool isBoss): frameIndex(0), _debuffActive(0), debugImgOffset(debugOffset), numColsOnFrame(_numColsOnFrame), speed(_speed), damage(_damage), selfDamage(_selfDamage), lateUpdateNode(nullptr), health(max_health), Behaviour(&data) {
 	colsOnFrame.reserve(numColsOnFrame);
 	colsOnFrame.emplace(Main::Tag::player, false);
 	colsOnFrame.emplace(Main::Tag::enemy, false);
 	colsOnFrame.emplace(Main::Tag::whirlPool, false);
 	colsOnFrame.emplace(Main::Tag::wrath, false);
 	isSingleEnemy = ++numEnemies == 1;
+    if (!isBoss) return;
+    rb->SetSize(entity->GetSize() * boss_size_increase, true);
+    for (int i = 0; i < rb->GetNumNarrowPhaseVertices(); i++) {
+        *rb->NarrowPAtI(i) *= boss_size_increase;
+    }
+    entity->SetRenderOffsetChangeX(entity->GetRenderOffsetChangeX() * boss_size_increase);
 }
 Enemy::~Enemy() {
     isSingleEnemy = --numEnemies == 1;

@@ -15,7 +15,7 @@
 #define PLAYER_WIDTH 70
 #define PLAYER_HEIGHT 70
 float Player::accel = 700000.f;
-float Player::speed = 2000.f;
+float Player::speed = 1150.f;
 float Player::knockBack = 600.f;
 float Player::plrAttkET = .0f;
 float Player::maxHealth = 50.f;
@@ -82,6 +82,9 @@ void Player::IncreaseProgress(float add) {
 		maxProgress *= progressIncrease;
 	}
 	progressBarEnt->SetSizeX((progressAmount) / maxProgress * static_cast<float>(progressBarInitSize.x));
+}
+void Player::RegenHealth(float amount) {
+	health = min(maxHealth, health + amount);
 }
 void Player::TakeDamage(float damage) {
 #ifdef IS_DEV

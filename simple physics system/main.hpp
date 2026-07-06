@@ -30,7 +30,7 @@ protected:
 	virtual ~Behaviour();
 public:
 	Behaviour(SubRBData);
-	Behaviour(SubRBData *, bool = false);
+	Behaviour(SubRBData *, bool subscribeUpdate = false);
 	friend class Player;
 };
 using namespace std;
@@ -396,6 +396,7 @@ public:
 		whirlPool = 8,
 		wrath = 9,
 		chest = 10,
+		_default = 11,
 	};
 	static FVector2 fInputVec;
 	static FVector2 fInputVec2;

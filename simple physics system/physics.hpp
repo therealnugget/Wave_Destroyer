@@ -432,7 +432,7 @@ struct SubRBData {
 private:
 	const static std::initializer_list<FVector2> DefaultSquareVerticesAsList;
 public:
-	SubRBData(std::string _basePath = Main::empty_string, std::vector<const char*> _animPaths = std::vector<const char*>(), std::vector<FVector2> _narrowPhaseVertices = DefaultSquareVerticesAsList, FVector2 _startPos = FVector2::Zero, IntVec2 _size = IntVec2::One, std::initializer_list<FVector2> _centreOfRot = std::initializer_list<FVector2>(), FVector2 _centreOfRotNPVert = FVector2::Zero, IntVec2 _renderOffset = IntVec2::Zero, int _tag = -1, bool isAffectedByCam = true, std::function<void(Collision*)> _collisionCallback = nullptr, std::unordered_map<std::string, std::variant<FVector2, FVector2*>> _imageSizes = std::unordered_map<std::string, std::variant<FVector2, FVector2*>>(), std::unordered_map<std::string, bool> _isGlobalSize = std::unordered_map<std::string, bool>(), FVector2 _initVel = FVector2::Zero, float _angle = .0f, float _mass = 1.f, bool _moveable = true, bool _isTrigger = false, std::initializer_list<const char*> _endPaths = std::initializer_list<const char*>(), bool _createEntity = true, float _renderOffsetChangeX = .0f, int_fast64_t _layer = Main::Layer::playerLayer, bool _neverSleep = false) : basePath(_basePath), animPaths(_animPaths), narrowPhaseVertices(_narrowPhaseVertices), startPos(_startPos), size(_size), centreOfRot(_centreOfRot), centreOfRotNPVert(_centreOfRotNPVert), renderOffset(_renderOffset), tag(_tag), collisionCallback(_collisionCallback), imageSizes(_imageSizes), isGlobalSize(_isGlobalSize), initVel(_initVel), angle(_angle), mass(_mass), moveable(_moveable), isTrigger(_isTrigger), endPaths(_endPaths), createEntity(_createEntity), renderOffsetChangeX(_renderOffsetChangeX), layer(_layer), neverSleep(_neverSleep), bAffectedByCam(isAffectedByCam) {};
+	SubRBData(std::string _basePath = Main::empty_string, std::vector<const char*> _animPaths = std::vector<const char*>(), std::vector<FVector2> _narrowPhaseVertices = DefaultSquareVerticesAsList, FVector2 _startPos = FVector2::Zero, IntVec2 _size = IntVec2::One, std::initializer_list<FVector2> _centreOfRot = std::initializer_list<FVector2>(), FVector2 _centreOfRotNPVert = FVector2::Zero, IntVec2 _renderOffset = IntVec2::Zero, int _tag = -1, bool isAffectedByCam = true, std::function<void(Collision*)> _collisionCallback = nullptr, std::unordered_map<std::string, std::variant<FVector2, FVector2*>> _imageSizes = std::unordered_map<std::string, std::variant<FVector2, FVector2*>>(), std::unordered_map<std::string, bool> _isGlobalSize = std::unordered_map<std::string, bool>(), FVector2 _initVel = FVector2::Zero, float _angle = .0f, float _mass = 1.f, bool _moveable = true, bool _isTrigger = false, std::initializer_list<const char*> _endPaths = std::initializer_list<const char*>(), bool _createEntity = true, float _renderOffsetChangeX = .0f, int_fast64_t _layer = Main::Layer::playerLayer, bool _neverSleep = false) : basePath(_basePath), animPaths(_animPaths), narrowPhaseVertices(_narrowPhaseVertices), startPos(_startPos), size(_size), centreOfRot(_centreOfRot), centreOfRotNPVert(_centreOfRotNPVert), renderOffset(_renderOffset), tag(_tag), collisionCallback(_collisionCallback), imageSizes(_imageSizes), isGlobalSize(_isGlobalSize), initVel(_initVel), angle(_angle), mass(_mass), moveable(_moveable), isTrigger(_isTrigger), endPaths(_endPaths), createEntity(_createEntity), renderOffsetChangeX(_renderOffsetChangeX), layer(_layer), bAffectedByCam(isAffectedByCam) {};
 	std::string basePath;
 	std::vector<const char*> animPaths;
 	std::vector<FVector2> narrowPhaseVertices;
@@ -454,7 +454,6 @@ public:
 	float mass;
 	bool moveable;
 	bool isTrigger;
-	bool neverSleep;
 	bool bAffectedByCam;
 };
 //maybe only use this as a reference or ptr
@@ -588,6 +587,12 @@ public:
 			}
 		}
 		SetTexture(curAnim.textures[(animFrameIndex = ((animFrameIndex + inc) % numAnimFrames))]);
+	}
+	inline void SetRenderOffsetChangeX(float value) {
+		renderOffsetChangeX = value;
+	}
+	inline float const GetRenderOffsetChangeX(void) const {
+		return renderOffsetChangeX;
 	}
 	inline void SetAnimation(int anim) {
 		currentAnimation = anim;
@@ -754,7 +759,7 @@ public:
 #ifdef DEBUG_BUILD
 		isDebugSquare(false),
 #endif
-		centreOfNarrowPVertRot(data->centreOfRotNPVert), isColliding(false), position(data->startPos), newPosition(data->startPos), pastPosition(data->startPos), bMoveable(data->moveable), bIsTrigger(data->isTrigger), OnCollision(data->collisionCallback), tag(data->tag), layer(data->layer), cacheNodeRef(nullptr), neverSleep(data->neverSleep), friction(FVector2::One), updateNode(nullptr) {
+		centreOfNarrowPVertRot(data->centreOfRotNPVert), isColliding(false), position(data->startPos), newPosition(data->startPos), pastPosition(data->startPos), bMoveable(data->moveable), bIsTrigger(data->isTrigger), OnCollision(data->collisionCallback), tag(data->tag), layer(data->layer), cacheNodeRef(nullptr), friction(FVector2::One), updateNode(nullptr) {
 		if (data->createEntity) {
 			entity = new Entity(data);
 			newPosition.IntoRectXY(entity->rect);

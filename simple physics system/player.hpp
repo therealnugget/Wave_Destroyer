@@ -51,6 +51,9 @@ private:
 	static IntVec2 plrAttkPos;
 	static void PlayDirAnim(int animation = -1, IntVec2 = IntVec2(-1, 0));
 public:
+	static inline float GetMaxHealth(void) {
+		return maxHealth;
+	}
 	static inline float GetDamage(void) {
 		return damage;
 	}
@@ -77,6 +80,7 @@ public:
 		return player->GetPosition();
 	}
 	static void TakeDamage(float);
+	static void RegenHealth(float);
 	static void IncreaseProgress(float);
 	static void IncreasePickupRange(float);
 	static void IncreaseHealth(float);

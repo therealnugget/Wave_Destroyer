@@ -27,6 +27,7 @@ protected:
 	static constexpr IntVec2 debuffSize = { 40, 40 };
 	static constexpr int debuffSeparation = 25;
 	static constexpr int default_num_cols_on_frame = 5;
+	static constexpr float boss_size_increase = 2.f;
 	static float knockBack;
 	float health;
 	enum debuffType {
@@ -53,7 +54,7 @@ protected:
 	void SetPlayerDist(void);
 	void EnactDamage(void);
 	virtual void CollisionCallback(Collision*);
-	Enemy(SubRBData, IntVec2 = IntVec2(155, 20), int max_health = default_max_health, float damage = 1.f, float selfDamage = .5f, float speed = 19000000.f, int numColsOnFrame = default_num_cols_on_frame);
+	Enemy(SubRBData, IntVec2 = IntVec2(155, 20), int max_health = default_max_health, float damage = 1.f, float selfDamage = .5f, float speed = 19000000.f, int numColsOnFrame = default_num_cols_on_frame, bool isBoss = false);
 	virtual void Update(void);
 	virtual void LateUpdate(void);
 	Node<std::function<void(void)>>* lateUpdateNode;
@@ -72,15 +73,16 @@ public:
 	inline static int GetNumEnemies(void){
 		return numEnemies;
 	}
-	virtual ~Enemy();
+	virtual ~Enemy(void);
 	virtual void TakeDamage(float damageAmount);
 	void OnDamaged(float, FVector2);
 	Node<Enemy*>* enemySpawnNode;
-	inline FVector2 GetPosition() {
+	inline FVector2 GetPosition(void) {
 		return rb->newPosition;
 	}
 	inline static void AddInsigniaTag(int tag) {
 		insigniaTagList.emplace(insigniaTagList.begin(), tag);
 	}
 	friend class SubRBData;
+	friend class EnemySpawner;
 };
