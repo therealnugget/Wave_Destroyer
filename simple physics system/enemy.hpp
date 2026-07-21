@@ -6,7 +6,12 @@
 class SwordGuy;
 class Enemy : public Behaviour {
 private:
-	static constexpr int default_max_health = 3;
+	static constexpr IntVec2 debuffDefaultOffset = IntVec2(155, 20);
+	static constexpr int default_boss_chance = 30;
+	static constexpr float default_max_health = 3.f;
+	static constexpr float default_damage = 1.f;
+	static constexpr float default_self_damage = .5f;
+	static constexpr float default_speed = 19000000.f;
 	static const std::unordered_map<int, const char*> debuffPaths;
 	struct Debuff {
 	public:
@@ -17,7 +22,7 @@ private:
 	std::unordered_map<int, Debuff> debuffTexes;
 	IntVec2 GetDebuffPos(int index);
 	void AddDebuffTex(int debuff);
-	IntVec2 debugImgOffset;
+	IntVec2 debuffImgOffset;
 	//don't access this directly. use the "GetDebuffActive(int)" and "SetDebuffActive(int)" functions.
 	int _debuffActive;
 	int frameIndex;
@@ -34,6 +39,31 @@ protected:
 		confused = 1,
 		poisoned = 2,
 	};
+	static inline const int GetDefaultBossChance(void) {
+		return default_boss_chance;
+	}
+	static inline bool GetIsBoss(int chance) {
+		return Main::GetRandInt(0, chance + 1) == 0;
+	}
+	static inline const int GetDefaultNumColsOnFrame(void) {
+		return default_num_cols_on_frame;
+	}
+	static inline const float GetDefaultMaxHealth(void) {
+		return default_max_health;
+	}
+	static inline const float GetDefaultDamage(void) {
+		return default_damage;
+	}
+	static inline const float GetDefaultSelfDamage(void) {
+		return default_self_damage;
+	}
+	//W seed - ur unc if u dont get the reference
+	static inline const  float GetDefaultSpeed(void) {
+		return default_speed;
+	}
+	static inline const IntVec2 GetDefaultDebugOffset(void) {
+		return debuffDefaultOffset;
+	}
 	inline bool GetDebuffActive(int debuff) {
 		return _debuffActive & debuff;
 	}
@@ -54,7 +84,7 @@ protected:
 	void SetPlayerDist(void);
 	void EnactDamage(void);
 	virtual void CollisionCallback(Collision*);
-	Enemy(SubRBData, IntVec2 = IntVec2(155, 20), int max_health = default_max_health, float damage = 1.f, float selfDamage = .5f, float speed = 19000000.f, int numColsOnFrame = default_num_cols_on_frame, bool isBoss = false);
+	Enemy(SubRBData, IntVec2 = debuffDefaultOffset, float max_health = default_max_health, float damage = default_damage, float selfDamage = default_self_damage, float speed = default_speed, int numColsOnFrame = default_num_cols_on_frame, bool isBoss = false);
 	virtual void Update(void);
 	virtual void LateUpdate(void);
 	Node<std::function<void(void)>>* lateUpdateNode;

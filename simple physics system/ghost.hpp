@@ -21,7 +21,8 @@ private:
 	static constexpr float teleport_out_factor = 80.f;
 	static constexpr int random_spawn_one_in = 3;
 	static float initSpeed;
-	bool temp;
+	//the chance that one of these enemies will spawn as a boss is (1 / bossChance).
+	static int bossChance;
 	Timer avoidanceTimer;
 	bool lastFramePlrClose;
 public:

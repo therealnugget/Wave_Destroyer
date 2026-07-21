@@ -166,10 +166,12 @@ public:
 	inline float operator ^(Vector2 b) {
 		return this->x * b.x + this->y * b.y;
 	}
+	//returns zero vector if magnitude is zero.
 	inline Vector2 Normalized() {
 		auto r = Magnitude();
-		bool rZero = r == .0f;
-		return GetZero() * rZero + *this / r * !rZero;
+		//cannot be done without branching using addition due to the way -NaN works with multiplications and additions. (i.e., it will evaluate to -NaN if you have an expression such as x / 0 * boolean + x / y * !boolean where x != 0 and y != 0).
+		if (r == .0f) return GetZero();
+		return *this / r;
 	}
 	inline static Vector2 FromTo(Vector2 from, Vector2 to) {
 		return -from + to;
@@ -612,6 +614,12 @@ public:
 	inline IntVec2 GetSize() const {
 		return { rect->w, rect->h };
 	}
+	inline int GetSizeX() const {
+		return rect->w;
+	}
+	inline int GetSizeY() const {
+		return rect->h;
+	}
 	inline void SetSizeX(int x) {
 		rect->w = x;
 	}
@@ -791,16 +799,19 @@ public:
 	inline void SetTrigger(bool trigger) {
 		bIsTrigger = trigger;
 	}
-	inline float GetMass() {
+	inline float GetMass(void) {
 		return mass;
 	}
-	inline float GetInvMass() {
+	inline float GetInvMass(void) {
 		return invMass;
 	}
 	inline void AddForce(FVector2 f) {
 		force += f;
 	}
-	inline FVector2 GetVelocity() const {
+	inline FVector2 GetForce(void) const {
+		return force;
+	}
+	inline FVector2 GetVelocity(void) const {
 		return velocity;
 	}
 	inline void SetVelocity(FVector2 value) {
@@ -882,7 +893,6 @@ private:
 	FVector2 force;
 	Entity *entity;
 	rbList* cacheNodeRef;
-	bool neverSleep;
 	FVector2 position;
 	FVector2 friction;
 	FVector2 pastPosition;

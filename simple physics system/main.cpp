@@ -298,6 +298,7 @@ float Main::timeScale = 1.f;
 //dt updates are called before updates
 MultiDelegate<float> Main::dtUpdates;
 //regular (no argument) updates are called after dt updates
+MultiDelegate<void> Main::EarlyUpdates;
 MultiDelegate<void> Main::Updates;
 MultiDelegate<void> Main::LateUpdates;
 MultiDelegate<void> Main::PauseUpdates;
@@ -354,6 +355,7 @@ int main(int argc, char* args[])
         //all normal behaviours after early update and before physics::update().
         Main::EarlyUpdate();
         if (Main::CheckPauseState()) goto pause_screen;
+        Main::EarlyUpdates();
         Main::Updates();
         Main::dtUpdates(Main::DefCapDeltaTime());
 //#define SHOW_FPS

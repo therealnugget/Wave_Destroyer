@@ -4,6 +4,7 @@
 #include "camera.hpp"
 #include "player.hpp"
 #include "Crystal.hpp"
+#include <tuple>
 Node<std::function<void(void)>>* ChestSpawner::updateNode;
 Timer ChestSpawner::chestSpawnTimer;
 void ChestSpawner::Init(void) {
@@ -30,7 +31,7 @@ void Chest::Update(void) {
 		return;
 	}
 	if (!entity->AnimFinished(opening)) return;
-	new HealthPotion(rb->GetPosition());
+	new Potion(rb->GetPosition(), Main::GetRandFloat(.0f, 1.f) > .5f ? Potion::PotionType::healthPotion : Potion::PotionType::staminaPotion);
 	delete this;
 }
 void Chest::OnCollision(Collision *collision) {
@@ -38,12 +39,18 @@ void Chest::OnCollision(Collision *collision) {
 	colOnFrame = true;
 	entity->SetAnimation(opening);
 }
-void HealthPotion::OnCollision(Collision* collision) {
+void Potion::OnCollision(Collision* collision) {
 	if (colOnFrame || !collision->CompareTag(Main::Tag::player)) return;
-	Player::RegenHealth(Player::GetMaxHealth() * .25f);
 	colOnFrame = true;
+	switch (potionType) {
+	case healthPotion:
+		Player::RegenHealth(Player::GetMaxHealth() * .25f);
+		return;
+	case staminaPotion:
+		Player::RegenStamina(stamina_add_amount);
+	}
 }
-void HealthPotion::Update(void) {
+void Potion::Update(void) {
 	if (destroyTimer.GetElapsedSeconds() > max_alive_time) {
 		delete this;
 		return;
@@ -56,7 +63,10 @@ void HealthPotion::Update(void) {
 		return;
 	}
 }
-HealthPotion::HealthPotion(FVector2 position): currentHomeForce(start_in_speed), Behaviour(SubRBData("health potion"s, { "health potion" }, static_cast<FVector2>(health_potion_collider_size) * Physics::DefaultSquareVerticesVec, position, health_potion_size, std::initializer_list<FVector2>(), FVector2::Zero, -health_potion_size * .5f, Main::Tag::_default, true, nullptr, std::unordered_map<std::string, std::variant<FVector2, FVector2*>>(), std::unordered_map<std::string, bool>(), FVector2::Zero, .0f, 1.f, false, false, Main::empty_cc_init, true, .0f, Main::Layer::all)), destroyTimer(true, destroy_time), collected(false) {
+const std::unordered_map<Potion::PotionType, std::tuple<std::string, const char*>> Potion::potionTypeToName = { { healthPotion, { std::string(health_potion_path), health_potion_path } }, { staminaPotion, { std::string(stamina_potion_path), stamina_potion_path } } };
+const char* Potion::stamina_potion_path = "stamina potion";
+const char* Potion::health_potion_path = "health potion";
+Potion::Potion(FVector2 position, PotionType type): currentHomeForce(start_in_speed), potionType(type), Behaviour(SubRBData(std::get<0>(potionTypeToName.at(type)), {std::get<1>(potionTypeToName.at(type))}, static_cast<FVector2>(potion_collider_size)* Physics::DefaultSquareVerticesVec, position, potion_size, std::initializer_list<FVector2>(), FVector2::Zero, -potion_size * .5f, Main::Tag::_default, true, nullptr, std::unordered_map<std::string, std::variant<FVector2, FVector2*>>(), std::unordered_map<std::string, bool>(), FVector2::Zero, .0f, 1.f, false, false, Main::empty_cc_init, true, .0f, Main::Layer::all)), destroyTimer(true, destroy_time), collected(false) {
 	rb->SetCollisionCallback([this](Collision* col) {OnCollision(col); });
 	SetUpdateNode(Main::Updates += [this]() {Update();});
 }

@@ -452,6 +452,7 @@ public:
 	static void ClearInput(void);
 	static void EarlyUpdate(void);
 	static MultiDelegate<float> dtUpdates;
+	static MultiDelegate<void> EarlyUpdates;
 	static MultiDelegate<void> Updates;
 	static MultiDelegate<void> LateUpdates;
 	static MultiDelegate<void> PauseUpdates;

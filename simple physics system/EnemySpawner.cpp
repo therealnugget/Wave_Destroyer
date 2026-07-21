@@ -90,5 +90,5 @@ void EnemySpawner::DestroyEnemy(Node<Enemy*> *guy) {
 }
 void EnemySpawner::Init(void) {
 	textData = Text::TextData(waveTextSizeVec, Main::halfDisplaySizeI + waveTextOffset, "broken");
-	Main::Updates += EnemySpawner::Update;
+	Main::EarlyUpdates += EnemySpawner::Update;
 }

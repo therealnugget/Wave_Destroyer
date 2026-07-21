@@ -11,27 +11,32 @@
 #include "Item.hpp"
 #include "camera.hpp"
 #include "PlayerProjectile.hpp"
-//#define IS_DEV
 #define PLAYER_WIDTH 70
 #define PLAYER_HEIGHT 70
 float Player::accel = 700000.f;
-float Player::speed = 1150.f;
-float Player::knockBack = 600.f;
+float Player::speed = initSpeed;
+float Player::runSpeedMultAdd = 1.75f;
+float Player::knockBack = 30.0f;
 float Player::plrAttkET = .0f;
 float Player::maxHealth = 50.f;
 float Player::health = Player::maxHealth;
 float Player::crystalColldierSizeMult = 1.4f;
+float Player::staminaDecreaseSpeed = 4000.f;
 FVector2 Player::mouseDiff;
 const FVector2 Player::playerCollider = FVector2(.375f, .5f);
+const std::string Player::spear_base_path = "spear";
+const std::string Player::sword_base_path = "sword slash";
 static constexpr float swordSizeMult = 1.2f;
 IntVec2 Player::swordSize = IntVec2(PLAYER_WIDTH * swordSizeMult, PLAYER_HEIGHT * swordSizeMult);
 static constexpr float spearSizeMult = .9f;
 IntVec2 Player::spearSize = IntVec2(PLAYER_WIDTH * spearSizeMult, PLAYER_HEIGHT * spearSizeMult);
 IntVec2 Player::pastInp;
 Timer Player::immuneTimer;
+Timer Player::sprintCooldown;
 bool Player::mouseVertical;
 bool Player::colOnFrame = false;
 bool Player::enabled = true;
+bool Player::pastStaminaPositive = true;
 rbList* Player::plrNode;
 rbList* Player::plrAttack = nullptr;
 RigidBody *Player::player;
@@ -48,8 +53,10 @@ static IntVec2 playerSize = IntVec2(static_cast<float>(PLAYER_WIDTH), static_cas
 static IntVec2 playerSizeFVec = static_cast<FVector2>(playerSize);
 FVector2 Player::healthBarOffset = { -21.f, -35.f };
 IntVec2 Player::healthBarSize = IntVec2(40, 20);
-FVector2 Player::progressBarPos = { 0.0f, 0.0f };
+FVector2 Player::progressBarPos = { 0.0f, 17.f };
 IntVec2 Player::progressBarInitSize = IntVec2(2000, 30);
+FVector2 Player::staminaBarPos = { 0.0f, .0f };
+IntVec2 Player::staminaBarInitSize = IntVec2(2000, 17);
 IntVec2 Player::plrAttkPos;
 FVector2 Main::defaultPlrPos;
 IntVec2 Main::defaultPlrPosI;
@@ -57,17 +64,14 @@ float Player::maxProgress = 10.f;
 float Player::progressIncrease = 1.5f;
 float Player::progressAmount = .0f;
 float Player::projectileSpd = 600.f;
-float Player::damage = 
-#ifdef IS_DEV
-1000.f
-#else
-1.f
-#endif
-;
+float Player::damage = init_damage;
+float Player::spearDamageMultiplier = 2.5f;
 Node<Entity*> *Player::healthbar;
 Entity* Player::healthBarEnt;
 Node<Entity*> *Player::progressBar;
 Entity* Player::progressBarEnt;
+Node<Entity*> *Player::staminaBar;
+Entity* Player::staminaBarEnt;
 Node<RigidBody*>* Player::crystalCollider;
 RigidBody* Player::crystalColliderRb;
 void Player::IncreaseProgress(float add) {
@@ -85,6 +89,10 @@ void Player::IncreaseProgress(float add) {
 }
 void Player::RegenHealth(float amount) {
 	health = min(maxHealth, health + amount);
+}
+void Player::RegenStamina(float amount) {
+	auto maxStamina = staminaBarInitSize.x;
+	staminaBarEnt->SetSizeX(std::max(staminaBarEnt->GetSizeX() + static_cast<int>(static_cast<float>(maxStamina) * amount), maxStamina));
 }
 void Player::TakeDamage(float damage) {
 #ifdef IS_DEV
@@ -122,6 +130,7 @@ void Player::Init(void) {
 	plrNode = plrBehaviour->rbNode;
 	player = plrNode->value;
 	immuneTimer = Timer();
+	sprintCooldown = Timer(sprint_cooldown_time);
 	Camera::cameraPosition = IntVec2(player->GetPosition());
 	player->SetTrigger(true);
 	player->updateNode = Main::Updates += Player::Update;
@@ -136,9 +145,12 @@ void Player::Init(void) {
 	healthbar = Physics::SubStandaloneEnt(Entity::MakeEntity("health bar", { "health_bar" }, healthBarOffset, healthBarSize));
 	healthBarEnt = healthbar->value;
 	healthBarEnt->SetNotLoop(healthBarAnim);
-	progressBarPos = -defPlrPos;
+	progressBarPos += -defPlrPos;
 	progressBar = Physics::SubStandaloneEnt(Entity::MakeEntity(Main::empty_string, { "progress_bar" }, progressBarPos, progressBarInitSize * IntVec2::GetUp()));
 	progressBarEnt = progressBar->value;
+	staminaBarPos += -defPlrPos;
+	staminaBar = Physics::SubStandaloneEnt(Entity::MakeEntity(Main::empty_string, { "stamina_bar" }, staminaBarPos, staminaBarInitSize));
+	staminaBarEnt = staminaBar->value;
 	constexpr int numShapes = 0;
 	if (!numShapes) return;
 	constexpr float scaleFact = .1f;
@@ -166,7 +178,8 @@ void Player::LateUpdate(void) {
 		if (!plrAttack) {
 			RigidBody* attackRB;
 			Entity* attackEnt;
-			plrAttack = CreatePlayerProjectile(Main::rightClick ? "spear"s : "sword slash"s, Main::rightClick ? "spear" : "sword_slash", plrAttkPos, spearSize * Main::rightClick + swordSize * Main::leftClick, &attackRB, &attackEnt, mouseDiff.Angle());
+			plrAttack = CreatePlayerProjectile(!Main::leftClick ? spear_base_path : sword_base_path, !Main::leftClick ? spear_end_path : sword_end_path, plrAttkPos, spearSize * Main::rightClick + swordSize * Main::leftClick, &attackRB, &attackEnt, mouseDiff.Angle());
+			damage = init_damage * spearDamageMultiplier * !Main::leftClick + init_damage * Main::leftClick;
 			attackEnt->SetNotLoop(attkSlashAnim);
 			attackRB->SetFricCoef(.0f);
 			attackEnt->SetAnimSpd(attackSlashAnimSpeed);
@@ -177,7 +190,7 @@ void Player::LateUpdate(void) {
 			attackEnt->ResetAnim(attkSlashAnim);
 			plrAttkET = .0f;
 		}
-		plrAttack->value->SetRotation(static_cast<double>(mouseDiff.Angle()) + 180.f + spearRotationOffset * Main::rightClick);
+		plrAttack->value->SetRotation(static_cast<double>(mouseDiff.Angle()) + 180.f + spearRotationOffset * !Main::leftClick);
 		plrAttkET += Main::DeltaTime();
 		plrAttack->value->SetPosition(GetProjectilePos(plrAttkET, mouseDiff));
 		return;
@@ -222,7 +235,15 @@ void Player::Update(void) {
 	}
 #endif
 	healthBarEnt->SetAnimFrame(static_cast<int>(floorf(GetHealthFrac() * static_cast<float>(healthBarEnt->GetNumAnimFrames() - 1))));
-	if (Main::GetKey(SDL_SCANCODE_O)) player->SetRotation(player->GetRotation() + rotationSpd * Main::DeltaTime());
+	auto stamina = staminaBarEnt->GetSizeX();
+	auto staminaPos = !!stamina;
+	auto isSprinting = Main::GetKey(SDL_SCANCODE_LSHIFT) && Main::moving && staminaPos;
+	auto dt = Main::DeltaTime();
+	if (stamina <= 0 && pastStaminaPositive) sprintCooldown.Reset();
+	staminaBarEnt->SetSizeX(std::clamp(stamina + static_cast<int>(staminaDecreaseSpeed * dt) * ((sprintCooldown.GetElapsedSeconds() >= sprint_cooldown_time && !isSprinting) * 2 - 1), 0, staminaBarInitSize.x));
+	pastStaminaPositive = staminaPos;
+	speed = (isSprinting * runSpeedMultAdd + 1.f) * initSpeed;
+	if (Main::GetKey(SDL_SCANCODE_O)) player->SetRotation(player->GetRotation() + rotationSpd * dt);
 	if (!Main::clicking && plrAttack) {
 		Physics::DeleteRB(plrAttack);
 		plrAttack = nullptr;

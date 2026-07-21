@@ -19,6 +19,8 @@ private:
 	static constexpr float avoid_spd_multiplier = 3.f;
 	static constexpr float max_avoid_time = 4.f;
 	static float initSpeed;
+	//the chance that one of these enemies will spawn as a boss is (1 / bossChance).
+	static int bossChance;
 	bool lastFramePlrAvoid;
 	Timer avoidanceTimer;
 public:

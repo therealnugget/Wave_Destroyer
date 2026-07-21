@@ -8,7 +8,8 @@
 //static const FVector2 bobSize = FVector2(86.f * 2.f, 86.f);//minimum size for 500 entites on screen
 static constexpr FVector2 bobSize = FVector2(172.f * 2.f, 172.f);
 constexpr static float border = .1f;
-SwordGuy::SwordGuy(void) : attackDecide(false), attackDecision(Main::GetRandInt(overhead, swing, dash)), Enemy(SubRBData("sword guy", Animations::MakeAnimStrs(numSGAnims, idle, "idle", overhead, "overhead", swing, "swing", death, "death", dash, "dash", hurt, "hurt", run, "run", walk, "walk", jump, "jump"), FVector2(13.f / 128.f, 24.f / 64.f) * Physics::GetDefaultSquareVertVec(), /*Main::halfDisplaySize + FVector2::GetRight() * 350.f*/Main::GetRandFVec(static_cast<FVector2>(Camera::GetCamExtentWorld(1.f)) - Main::halfDisplaySize * border, static_cast<FVector2>(Camera::GetCamExtentWorld(-1.f)) + Main::halfDisplaySize * border), bobSize, std::initializer_list<FVector2>(), FVector2::Zero, IntVec2(-bobSize.x * .5f, -bobSize.y * .5f), Main::Tag::enemy, true, [this](Collision* collision) { CollisionCallback(collision); }, std::unordered_map<std::string, std::variant<FVector2, FVector2*>>(), std::unordered_map<std::string, bool>(), FVector2::Zero, .0, 1.f, true, false, { "right" }, true, 32.f / 128.f * bobSize.x, Main::Layer::enemyLayer)) {
+int SwordGuy::bossChance = Enemy::GetDefaultBossChance();
+SwordGuy::SwordGuy(bool isBoss) : attackDecide(false), attackDecision(Main::GetRandInt(overhead, swing, dash)), Enemy(SubRBData("sword guy", Animations::MakeAnimStrs(numSGAnims, idle, "idle", overhead, "overhead", swing, "swing", death, "death", dash, "dash", hurt, "hurt", run, "run", walk, "walk", jump, "jump"), FVector2(13.f / 128.f, 24.f / 64.f) * Physics::GetDefaultSquareVertVec(), /*Main::halfDisplaySize + FVector2::GetRight() * 350.f*/Main::GetRandFVec(static_cast<FVector2>(Camera::GetCamExtentWorld(1.f)) - Main::halfDisplaySize * border, static_cast<FVector2>(Camera::GetCamExtentWorld(-1.f)) + Main::halfDisplaySize * border), bobSize, std::initializer_list<FVector2>(), FVector2::Zero, IntVec2(-bobSize.x * .5f, -bobSize.y * .5f), Main::Tag::enemy, true, [this](Collision* collision) { CollisionCallback(collision); }, std::unordered_map<std::string, std::variant<FVector2, FVector2*>>(), std::unordered_map<std::string, bool>(), FVector2::Zero, .0, 1.f, true, false, { "right" }, true, 32.f / 128.f * bobSize.x, Main::Layer::enemyLayer), Enemy::GetDefaultDebugOffset(), Enemy::GetDefaultMaxHealth(), Enemy::GetDefaultDamage(), Enemy::GetDefaultSelfDamage(), Enemy::GetDefaultSpeed(), Enemy::GetDefaultNumColsOnFrame(), Enemy::GetIsBoss(bossChance)) {
     entity->SetAnimation(run);
     for (auto& anim : { hurt, overhead, swing, dash, death }) {
         entity->SetNotLoop(anim);
@@ -53,7 +54,7 @@ void SwordGuy::Update(void) {
         }
         return;
     }
-    if (curAnim == hurt && !animFinished) return;
+    if (curAnim == hurt && !animFinished) goto ret;
     if (curAnim == dash) {
         if (!animFinished) return;
         attackDecide = true;
@@ -77,8 +78,8 @@ void SwordGuy::Update(void) {
         goto attack;
     }
     ResetIfAttkFin(run);
-    rb->AddForce(toPlr.Normalized() * speed * Main::DefCapDeltaTime());
 ret:
+    rb->AddForce(toPlr.Normalized() * speed * Main::DefCapDeltaTime());
     touchingEnemy = false;
     entity->SetFlip(toPlr.x < .0f);
 }

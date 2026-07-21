@@ -499,6 +499,7 @@ void Physics::ProcessTexs(void) {
 }
 void Physics::Update(float dt) {
 	curNode = entityHead;
+	fricCoefByDT = fricCoef * dt;
 	while (curNode) {
 		currentRB = curNode->value;
 		//F_net=m*a_net
@@ -515,7 +516,7 @@ void Physics::Update(float dt) {
 		//v=velocity from last frame + net force applied from last frame * inverse mass of entity * delta time
 		//can't add the force after the total force is added to the velocity, otherwise the force will be reset before the start of the next frame.
 		currentRBVel = currentRB->GetVelocity();
-		if (currentRBVel.Magnitude() > (fricCoefByDT = fricCoef * dt)) currentRB->velocity -= Math::SignOrZero(currentRBVel) * fricCoefByDT * currentRB->friction;
+		if (currentRBVel.Magnitude() > (fricCoefByDT)) currentRB->velocity -= Math::SignOrZero(currentRBVel) * fricCoefByDT * currentRB->friction;
 		else currentRB->velocity = FVector2::Zero;
 		currentRB->velocity += currentRB->force * currentRB->invMass * dt;
 		currentRB->difPositionSection = (currentRB->newPosition - currentRB->pastPosition) * inv_num_movement_iterations_f;

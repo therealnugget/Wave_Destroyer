@@ -5,10 +5,10 @@
 static constexpr float default_immune_time = .6f;
 int Enemy::numEnemies = 0;
 bool Enemy::isSingleEnemy = true;
-float Enemy::knockBack = 1400.f;
+float Enemy::knockBack = 10.f;
 std::vector<int> Enemy::insigniaTagList;
 const std::unordered_map<int, const char*> Enemy::debuffPaths = { {confused, "question mark/question mark"}, {poisoned, "poison/poison debuff"} };
-Enemy::Enemy(SubRBData data, IntVec2 debugOffset, int max_health, float _damage, float _selfDamage, float _speed, int _numColsOnFrame, bool isBoss): frameIndex(0), _debuffActive(0), debugImgOffset(debugOffset), numColsOnFrame(_numColsOnFrame), speed(_speed), damage(_damage), selfDamage(_selfDamage), lateUpdateNode(nullptr), health(max_health), Behaviour(&data) {
+Enemy::Enemy(SubRBData data, IntVec2 debuffOffset, float max_health, float _damage, float _selfDamage, float _speed, int _numColsOnFrame, bool isBoss): frameIndex(0), _debuffActive(0), debuffImgOffset(debuffOffset), numColsOnFrame(_numColsOnFrame), speed(_speed), damage(_damage), selfDamage(_selfDamage), lateUpdateNode(nullptr), health(max_health), Behaviour(&data) {
 	colsOnFrame.reserve(numColsOnFrame);
 	colsOnFrame.emplace(Main::Tag::player, false);
 	colsOnFrame.emplace(Main::Tag::enemy, false);
@@ -51,7 +51,7 @@ void Enemy::TakeDamage(float damageAmount) {
 	health -= damageAmount;
 }
 IntVec2 Enemy::GetDebuffPos(int index) {
-    return IntVec2(debugImgOffset.x + debuffSeparation * index * ((index & 1) * 2 - 1), debugImgOffset.y);
+    return IntVec2(debuffImgOffset.x + debuffSeparation * index * ((index & 1) * 2 - 1), debuffImgOffset.y);
 }
 void Enemy::AddDebuffTex(int debuff) {
     if (!lateUpdateNode && !isSingleEnemy) lateUpdateNode = (Main::LateUpdates += [this]() {LateUpdate(); });
@@ -69,51 +69,50 @@ void Enemy::OnDamaged(float damageAmount, FVector2 velocityChange) {
     if (!derivedTakeDamage) ThrowError("derivedTakeDamage of enemy base class has not been assigned in the derived class. please assign it to the base function of TakeDamage(float).");
 #endif
     derivedTakeDamage(damageAmount);
-    rb->AddVelocity(velocityChange);
+    rb->AddForce(velocityChange);
 }
 void Enemy::CollisionCallback(Collision* collision) {
     if (!enabled) return;
     auto plrTag = Main::Tag::player;
-    auto& curCol = colsOnFrame[plrTag];
-    if (!curCol && collision->CompareTag(plrTag)) {
+    auto& curColOnFrame = colsOnFrame[plrTag];
+    if (!curColOnFrame && collision->CompareTag(plrTag)) {
         EnactDamage();
-        curCol = true;
+        curColOnFrame = true;
         return;
     }
     for (int tag : insigniaTagList) {
-        curCol = colsOnFrame[tag];
-        if (curCol || !collision->CompareTag(tag)) continue;
+        curColOnFrame = colsOnFrame[tag];
+        if (curColOnFrame || !collision->CompareTag(tag)) continue;
         auto insigniaDmg = InsigniaEquipped::GetDamage(tag);
         if (insigniaDmg) OnDamaged(insigniaDmg, FVector2::Zero);
-        curCol = true;
+        curColOnFrame = true;
         if (tag != Main::Tag::whirlPool || !InsigniaEquipped::GetWhirlPoolActive()) return;
         rb->AddForce(toPlr.Normalized() * InsigniaEquipped::GetPullForce());
         return;
     }
     auto enemyTag = Main::Tag::enemy;
-    curCol = colsOnFrame[enemyTag];
-    if (GetDebuffActive(confused) && !curCol && collision->CompareTag(enemyTag)) {
+    curColOnFrame = colsOnFrame[enemyTag];
+    if (GetDebuffActive(confused) && !curColOnFrame && collision->CompareTag(enemyTag)) {
         touchingEnemy = true;
-        curCol = true;
+        curColOnFrame = true;
         return;
     }
-    if (!colOnFrame) {
-        if (collision->CompareTag(Main::Tag::poison) && !GetDebuffActive(poisoned)) {
-            colOnFrame = true;
-            AddDebuffTex(poisoned);
-            return;
-        }
-        if (!isSingleEnemy && !GetDebuffActive(confused) && collision->CompareTag(Main::Tag::enemyTurner)) {
-            colOnFrame = true;
-            AddDebuffTex(confused);
-            rb->tag = Main::Tag::enemyTurned;
-            return;
-        }
-        auto isPlr = collision->CompareTag(Main::Tag::playerAttack);
-        if (!isPlr && !collision->CompareTag(Main::Tag::enemyTurned)) return;
+    if (colOnFrame) return;
+    if (collision->CompareTag(Main::Tag::poison) && !GetDebuffActive(poisoned)) {
         colOnFrame = true;
-        OnDamaged(isPlr * Player::GetDamage() + !isPlr * selfDamage, collision->GetNormal() * (isPlr * Player::GetKnockBack() + !isPlr * knockBack));
+        AddDebuffTex(poisoned);
+        return;
     }
+    if (!isSingleEnemy && !GetDebuffActive(confused) && collision->CompareTag(Main::Tag::enemyTurner)) {
+        colOnFrame = true;
+        AddDebuffTex(confused);
+        rb->tag = Main::Tag::enemyTurned;
+        return;
+    }
+    auto isPlr = collision->CompareTag(Main::Tag::playerAttack);
+    if (!isPlr && !collision->CompareTag(Main::Tag::enemyTurned)) return;
+    colOnFrame = true;
+    OnDamaged(isPlr * Player::GetDamage() + !isPlr * selfDamage, collision->GetNormal() * (isPlr * Player::GetKnockBack() + !isPlr * knockBack));
 }
 //it's not as simple as deleting the enemy as soon as the collision callback is called. if you think about it, the collision callback is in the middle of the physics update. so we will be deleting a rigidbody in the middle of the narrow phase function, then trying to access it later on in that same function, and then again in the physics update. so the closest thing we can do is:
 //1: if we need the enemy to appear as though he is deleted as soon as the collision occurs, delete the entity, and destroy the outer behaviour at the start of the next frame

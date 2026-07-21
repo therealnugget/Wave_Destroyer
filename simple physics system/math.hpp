@@ -22,6 +22,12 @@ public:
 	static inline T Max(T a, T b) {
 		return a > b ? a : b;
 	}
+	static inline int MinI(int a, int b) {
+		return a < b ? a : b;
+	}
+	static inline int MaxI(int a, int b) {
+		return a > b ? a : b;
+	}
 	static inline float Min(float a, float b) {
 		return a < b ? a : b;
 	}

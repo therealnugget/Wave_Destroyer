@@ -15,6 +15,8 @@ private:
 		numBatAnims,
 	};
 	static constexpr float attackDistSqr = 5500.f;
+	//the chance that one of these enemies will spawn as a boss is (1 / bossChance).
+	static int bossChance;
 public:
 	Bat(void);
 	~Bat(void) override {
