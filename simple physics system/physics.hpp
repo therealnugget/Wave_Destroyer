@@ -178,7 +178,9 @@ public:
 	}
 	static Vector2<T> FromTo(RigidBody *from, RigidBody *to);
 	inline void Normalize() {
-		*this /= Magnitude();
+		auto r = Magnitude();
+		if (r == .0f) return;
+		*this /= r;
 	}
 	inline void Rotate(float angle) {
 		auto sin = sinf(angle), cos = cosf(angle);

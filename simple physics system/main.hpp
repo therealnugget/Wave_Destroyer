@@ -575,6 +575,11 @@ private:
 	static bool keyDownHorizon, keyDownVert;
 	//whether the axis is cancelled (i.e. vertical axis is cancelled by any horizontal input, vertical axis is cancelled by any horizontal input.)
 	static bool cancelH, cancelV;
+	/*static bool pastPaused;
+	static Node<Text*>* pauseText;
+	static constexpr int pauseTextSize = 140;
+	static constexpr IntVec2 pauseTextSizeVec = IntVec2(pauseTextSize * 2, pauseTextSize);
+	static constexpr IntVec2 pauseTextOffset = IntVec2(0, 0);*/
 	static bool focusLostPauseState;
 	static Node<int>* setPressed;
 	static bool pressingKey[];//whether the key was pressed this frame

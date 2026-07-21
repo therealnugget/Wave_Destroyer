@@ -16,6 +16,7 @@ Enemy::Enemy(SubRBData data, IntVec2 debuffOffset, float max_health, float _dama
 	colsOnFrame.emplace(Main::Tag::wrath, false);
 	isSingleEnemy = ++numEnemies == 1;
     if (!isBoss) return;
+    
     rb->SetSize(entity->GetSize() * boss_size_increase, true);
     for (int i = 0; i < rb->GetNumNarrowPhaseVertices(); i++) {
         *rb->NarrowPAtI(i) *= boss_size_increase;

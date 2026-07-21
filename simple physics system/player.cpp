@@ -104,6 +104,7 @@ void Player::TakeDamage(float damage) {
 	immuneTimer.Reset();
 	if (health > .0f) return;
 	Main::SetPauseState(true);
+	Main::canChangePause = false;
 	enabled = false;
 }
 void Player::IncreaseHealth(float increaseFactor) {
