@@ -8,6 +8,9 @@ class Enemy : public Behaviour {
 private:
 	static constexpr IntVec2 debuffDefaultOffset = IntVec2(155, 20);
 	static constexpr int default_boss_chance = 30;
+	static constexpr float boss_health_multiplier = 3.f;
+	static constexpr float boss_damage_multiplier = 2.f;
+	static constexpr float boss_speed_multiplier = 1.5f;
 	static constexpr float default_max_health = 3.f;
 	static constexpr float default_damage = 1.f;
 	static constexpr float default_self_damage = .5f;
