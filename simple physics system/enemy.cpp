@@ -8,7 +8,7 @@ bool Enemy::isSingleEnemy = true;
 float Enemy::knockBack = 10.f;
 std::vector<int> Enemy::insigniaTagList;
 const std::unordered_map<int, const char*> Enemy::debuffPaths = { {confused, "question mark/question mark"}, {poisoned, "poison/poison debuff"} };
-Enemy::Enemy(SubRBData data, IntVec2 debuffOffset, float max_health, float _damage, float _selfDamage, float _speed, int _numColsOnFrame, bool isBoss): frameIndex(0), _debuffActive(0), debuffImgOffset(debuffOffset), numColsOnFrame(_numColsOnFrame), speed(_speed), damage(_damage), selfDamage(_selfDamage), lateUpdateNode(nullptr), health(max_health), Behaviour(&data) {
+Enemy::Enemy(SubRBData data, IntVec2 debuffOffset, float max_health, float _damage, float _selfDamage, float _speed, int _numColsOnFrame, bool isBoss, float _minionSpawnTime, float _minionSpawnTimeVar, int _numMinions): frameIndex(0), _debuffActive(0), debuffImgOffset(debuffOffset), numColsOnFrame(_numColsOnFrame), speed(_speed), damage(_damage), selfDamage(_selfDamage), lateUpdateNode(nullptr), health(max_health), minionSpawnTime(_minionSpawnTime), minionSpawnTimeVariance(_minionSpawnTimeVar), numMinions(_numMinions), Behaviour(&data) {
 	colsOnFrame.reserve(numColsOnFrame);
 	colsOnFrame.emplace(Main::Tag::player, false);
 	colsOnFrame.emplace(Main::Tag::enemy, false);
@@ -16,6 +16,8 @@ Enemy::Enemy(SubRBData data, IntVec2 debuffOffset, float max_health, float _dama
 	colsOnFrame.emplace(Main::Tag::wrath, false);
 	isSingleEnemy = ++numEnemies == 1;
     if (!isBoss) return;
+    minionSpawnTimer = static_cast<Timer *>(_malloca(sizeof(Timer)));
+    minionSpawnTimer->Reset();
     health *= boss_health_multiplier;
     damage *= boss_damage_multiplier;
     speed *= boss_speed_multiplier;
@@ -127,6 +129,11 @@ void Enemy::Update(void) {
     animFinished = entity->AnimFinished();
     toPlr = rb->GetPosition().To(Player::GetPosition());
     SetPlayerDist();
+    if (minionSpawnTimer->GetElapsedSeconds() > minionSpawnTime + minionSpawnTimeVariance) {
+        //TODO: implement this in derived classes
+        minionSpawnTimer->Reset(Main::GetRandFloat(.0f, minionSpawnTimeVariance * 2.f));
+        for (int minionIndex = 0; minionIndex < numMinions; minionIndex++) EnemySpawner::AddEnemy(enemyType)->rb->SetPosition(GetPosition());
+    }
     if (plrDistSqr < EnemySpawner::minPlrDist) {
         EnemySpawner::minPlrDist = plrDistSqr;
         EnemySpawner::closestEnemy = this;

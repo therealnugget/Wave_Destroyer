@@ -57,6 +57,13 @@ Enemy *EnemySpawner::SpawnEnemy(int type, FVector2 position) {
 	if (position != FVector2::Infinity) returnVal->rb->SetPosition(position);
 	return returnVal;
 }
+Enemy* EnemySpawner::AddEnemy(EnemyType enemyType) {
+	auto guy = SpawnEnemy(enemyType);
+	guy->enemySpawnNode = Node<Enemy*>::AddAtHeadByVal(guy, &enemies);
+	numSpawnedEnemies++;
+	guy->enemyType = enemyType;
+	return guy;
+}
 void EnemySpawner::Update(void) {
 	minPlrDist = FLT_MAX;
 	closestEnemy = nullptr;

@@ -15,14 +15,6 @@ private:
 	static int numSpawnedEnemies;
 	static int frameIndex;
 	static bool lastFrameEndWave;
-	//there can be a maximum of 64 enemies, but this can be increased down the line if need be
-	enum EnemyType {
-		bob = 1,
-		bat = 2,
-		ghost = 4,
-		spider = 8,
-		numEnemyTypes = 4,
-	};
 	inline static Enemy* SpawnEnemy(int type, FVector2 position = FVector2::Infinity);
 	static const std::vector<int> enemyTypeProgression;
 	static int progressionIndex;
@@ -39,5 +31,14 @@ public:
 	static void Init(void);
 	static void DestroyWaveText(void);
 	static void Update(void);
+	//there can be a maximum of 64 enemies, but this can be increased down the line if need be
+	enum EnemyType {
+		bob = 1,
+		bat = 2,
+		ghost = 4,
+		spider = 8,
+		numEnemyTypes = 4,
+	};
+	static Enemy *AddEnemy(EnemyType);
 	static void DestroyEnemy(Node<Enemy*>* guy);
 };
