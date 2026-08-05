@@ -12,7 +12,8 @@ private:
 	static constexpr float waveTextDisappearTime = 2.f;
 	static int maxEnemies;
 	static int waveIndex;
-	static int numSpawnedEnemies;
+	//this represents purely how many enemies have been spawned **BY THIS SCRIPT**. do not refer to this as the number of enemies spawned within the wave in total, as boss enemies can spawn minions.
+	static int numSelfSpawnedEnemies;
 	static int frameIndex;
 	static bool lastFrameEndWave;
 	inline static Enemy* SpawnEnemy(int type, FVector2 position = FVector2::Infinity);
@@ -39,6 +40,6 @@ public:
 		spider = 8,
 		numEnemyTypes = 4,
 	};
-	static Enemy *AddEnemy(EnemyType);
+	static Enemy *AddEnemy(int, FVector2 = FVector2::Infinity, bool canBeBoss = true);
 	static void DestroyEnemy(Node<Enemy*>* guy);
 };

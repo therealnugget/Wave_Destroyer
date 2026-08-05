@@ -3,7 +3,7 @@
 #include "physics.hpp"
 #include <SDL.h>
 #include "timer.hpp"
-//#define IS_DEV
+#define IS_DEV
 //static, therefore can't inherit from behaviour.
 class Player final {
 private:

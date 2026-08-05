@@ -36,7 +36,8 @@ private:
 	int _debuffActive;
 	int frameIndex;
 	int numMinions;
-	EnemySpawner::EnemyType enemyType;
+	int enemyType;
+	bool bIsBoss;
 	static std::vector<int> insigniaTagList;
 protected:
 	bool animFinished;
@@ -123,6 +124,7 @@ public:
 	inline static int GetNumEnemies(void){
 		return numEnemies;
 	}
+	void UndoBoss(void);
 	virtual ~Enemy(void);
 	virtual void TakeDamage(float damageAmount);
 	void OnDamaged(float, FVector2);

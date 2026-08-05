@@ -2,20 +2,22 @@
 #include "multicast delegates.hpp"
 #include "player.hpp"
 #include "EnemySpawner.hpp"
+//temp
+#include <vector>
 static constexpr float default_immune_time = .6f;
 int Enemy::numEnemies = 0;
 bool Enemy::isSingleEnemy = true;
 float Enemy::knockBack = 10.f;
 std::vector<int> Enemy::insigniaTagList;
 const std::unordered_map<int, const char*> Enemy::debuffPaths = { {confused, "question mark/question mark"}, {poisoned, "poison/poison debuff"} };
-Enemy::Enemy(SubRBData data, IntVec2 debuffOffset, float max_health, float _damage, float _selfDamage, float _speed, int _numColsOnFrame, bool isBoss, float _minionSpawnTime, float _minionSpawnTimeVar, int _numMinions): frameIndex(0), _debuffActive(0), debuffImgOffset(debuffOffset), numColsOnFrame(_numColsOnFrame), speed(_speed), damage(_damage), selfDamage(_selfDamage), lateUpdateNode(nullptr), health(max_health), minionSpawnTime(_minionSpawnTime), minionSpawnTimeVariance(_minionSpawnTimeVar), numMinions(_numMinions), Behaviour(&data) {
+Enemy::Enemy(SubRBData data, IntVec2 debuffOffset, float max_health, float _damage, float _selfDamage, float _speed, int _numColsOnFrame, bool isBoss, float _minionSpawnTime, float _minionSpawnTimeVar, int _numMinions): frameIndex(0), _debuffActive(0), debuffImgOffset(debuffOffset), numColsOnFrame(_numColsOnFrame), speed(_speed), damage(_damage), selfDamage(_selfDamage), lateUpdateNode(nullptr), health(max_health), minionSpawnTime(_minionSpawnTime), minionSpawnTimeVariance(_minionSpawnTimeVar), numMinions(_numMinions), bIsBoss(isBoss), Behaviour(&data) {
 	colsOnFrame.reserve(numColsOnFrame);
 	colsOnFrame.emplace(Main::Tag::player, false);
 	colsOnFrame.emplace(Main::Tag::enemy, false);
 	colsOnFrame.emplace(Main::Tag::whirlPool, false);
 	colsOnFrame.emplace(Main::Tag::wrath, false);
 	isSingleEnemy = ++numEnemies == 1;
-    if (!isBoss) return;
+    if (!bIsBoss) return;
     minionSpawnTimer = static_cast<Timer *>(_malloca(sizeof(Timer)));
     minionSpawnTimer->Reset();
     health *= boss_health_multiplier;
@@ -26,6 +28,19 @@ Enemy::Enemy(SubRBData data, IntVec2 debuffOffset, float max_health, float _dama
         *rb->NarrowPAtI(i) *= boss_size_increase;
     }
     entity->SetRenderOffsetChangeX(entity->GetRenderOffsetChangeX() * boss_size_increase);
+}
+//why does this method exist? well, i originally had constructor parameters for every base enemy class for whether it COULD be a boss or not, since the boss transformations happen in the constructor, so you can't set a base variable before it is constructed, so it was between that, this, and mallocing enemy classes, assigning a bool value for whether it can be a boss, and lazily constructing it. all solutions are ugly but this is undeniably the most scalable solution. HOWEVER, this is obviously an error-prone solution -- what if i call a method from the constructor before the "if(!bIsBoss)" line and it happens to check whether bIsBoss is true and does something to the enemy script? if i don't remember to undo that in this function, it leaves a hard-to-trace error.
+void Enemy::UndoBoss(void) {
+    _freea(minionSpawnTimer);
+    health /= boss_health_multiplier;
+    damage /= boss_damage_multiplier;
+    speed /= boss_speed_multiplier;
+    rb->SetSize(entity->GetSize() / boss_size_increase, true);
+    for (int i = 0; i < rb->GetNumNarrowPhaseVertices(); i++) {
+        *rb->NarrowPAtI(i) /= boss_size_increase;
+    }
+    entity->SetRenderOffsetChangeX(entity->GetRenderOffsetChangeX() / boss_size_increase);
+    bIsBoss = false;
 }
 Enemy::~Enemy() {
     isSingleEnemy = --numEnemies == 1;
@@ -129,10 +144,11 @@ void Enemy::Update(void) {
     animFinished = entity->AnimFinished();
     toPlr = rb->GetPosition().To(Player::GetPosition());
     SetPlayerDist();
-    if (minionSpawnTimer->GetElapsedSeconds() > minionSpawnTime + minionSpawnTimeVariance) {
-        //TODO: implement this in derived classes
+    if (bIsBoss && minionSpawnTimer->GetElapsedSeconds() > minionSpawnTime + minionSpawnTimeVariance) {
         minionSpawnTimer->Reset(Main::GetRandFloat(.0f, minionSpawnTimeVariance * 2.f));
-        for (int minionIndex = 0; minionIndex < numMinions; minionIndex++) EnemySpawner::AddEnemy(enemyType)->rb->SetPosition(GetPosition());
+        for (int minionIndex = 0; minionIndex < numMinions; minionIndex++) {
+            EnemySpawner::AddEnemy(enemyType, GetPosition(), false);
+        }
     }
     if (plrDistSqr < EnemySpawner::minPlrDist) {
         EnemySpawner::minPlrDist = plrDistSqr;

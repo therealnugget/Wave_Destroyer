@@ -8,7 +8,7 @@
 #include "types.hpp"
 #include "spider.hpp"
 int EnemySpawner::frameIndex;
-int EnemySpawner::numSpawnedEnemies = 0;
+int EnemySpawner::numSelfSpawnedEnemies = 0;
 bool EnemySpawner::lastFrameEndWave = false;
 Node<Text*> *EnemySpawner::waveText = nullptr;
 Timer* EnemySpawner::waveTextTimer = nullptr;
@@ -55,13 +55,13 @@ Enemy *EnemySpawner::SpawnEnemy(int type, FVector2 position) {
 	}
 #endif
 	if (position != FVector2::Infinity) returnVal->rb->SetPosition(position);
+	returnVal->enemyType = type;
 	return returnVal;
 }
-Enemy* EnemySpawner::AddEnemy(EnemyType enemyType) {
-	auto guy = SpawnEnemy(enemyType);
+Enemy* EnemySpawner::AddEnemy(int enemyType, FVector2 position, bool canBeBoss) {
+	auto guy = SpawnEnemy(enemyType, position);
+	if (!canBeBoss && guy->bIsBoss) guy->UndoBoss();
 	guy->enemySpawnNode = Node<Enemy*>::AddAtHeadByVal(guy, &enemies);
-	numSpawnedEnemies++;
-	guy->enemyType = enemyType;
 	return guy;
 }
 void EnemySpawner::Update(void) {
@@ -72,20 +72,20 @@ void EnemySpawner::Update(void) {
 	if (bIsEndWave && !lastFrameEndWave) {
 		maxEnemies *= wave_num_enemy_mult;
 		progressionIndex = (progressionIndex + 1) % enemyTypeProgression.size();
-		numSpawnedEnemies = 0;
+		numSelfSpawnedEnemies = 0;
 		if (waveTextTimer) DestroyWaveText();
 		textData.SetText("Wave " + std::to_string(++waveIndex));
 		waveText = Physics::SubText(new Text(&textData));
 		waveTextTimer = new Timer();
 	}
 	lastFrameEndWave = bIsEndWave;
-	if (frameIndex++ % spawnFrameInterval || numSpawnedEnemies == maxEnemies) return;
+	if (frameIndex++ % spawnFrameInterval || numSelfSpawnedEnemies == maxEnemies) return;
 	int bitIndex = 1;
-	while (bitIndex != 0 && numSpawnedEnemies != maxEnemies) {
+	while (bitIndex != 0 && numSelfSpawnedEnemies != maxEnemies) {
 		if (enemyTypeProgression[progressionIndex] & bitIndex) {
 			auto guy = SpawnEnemy(bitIndex);
 			guy->enemySpawnNode = Node<Enemy*>::AddAtHeadByVal(guy, &enemies);
-			numSpawnedEnemies++;
+			numSelfSpawnedEnemies++;
 		}
 		bitIndex <<= 1;
 	}

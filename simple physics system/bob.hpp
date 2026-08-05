@@ -31,7 +31,7 @@ private:
 	float signAtDash;
 	void ResetIfAttkFin(int animation);
 public:
-	SwordGuy(bool isBoss = false);
+	SwordGuy();
 	~SwordGuy(void) override {
 	}
 };
