@@ -10,7 +10,7 @@ bool Enemy::isSingleEnemy = true;
 float Enemy::knockBack = 10.f;
 std::vector<int> Enemy::insigniaTagList;
 const std::unordered_map<int, const char*> Enemy::debuffPaths = { {confused, "question mark/question mark"}, {poisoned, "poison/poison debuff"} };
-Enemy::Enemy(SubRBData data, IntVec2 debuffOffset, float max_health, float _damage, float _selfDamage, float _speed, int _numColsOnFrame, bool isBoss, float _minionSpawnTime, float _minionSpawnTimeVar, int _numMinions): frameIndex(0), _debuffActive(0), debuffImgOffset(debuffOffset), numColsOnFrame(_numColsOnFrame), speed(_speed), damage(_damage), selfDamage(_selfDamage), lateUpdateNode(nullptr), health(max_health), minionSpawnTime(_minionSpawnTime), minionSpawnTimeVariance(_minionSpawnTimeVar), numMinions(_numMinions), bIsBoss(isBoss), Behaviour(&data) {
+Enemy::Enemy(SubRBData data, IntVec2 debuffOffset, float max_health, float _damage, float _selfDamage, float _speed, int _numColsOnFrame, bool isBoss, float _minionSpawnTime, float _minionSpawnTimeVar, int _numMinions, int _numCrystals): frameIndex(0), _debuffActive(0), debuffImgOffset(debuffOffset), numColsOnFrame(_numColsOnFrame), speed(_speed), damage(_damage), selfDamage(_selfDamage), lateUpdateNode(nullptr), health(max_health), minionSpawnTime(_minionSpawnTime), minionSpawnTimeVariance(_minionSpawnTimeVar), numMinions(_numMinions), bIsBoss(isBoss), numCrystalsDrop(_numCrystals + boss_num_crystal_add * bIsBoss), Behaviour(&data) {
 	colsOnFrame.reserve(numColsOnFrame);
 	colsOnFrame.emplace(Main::Tag::player, false);
 	colsOnFrame.emplace(Main::Tag::enemy, false);
@@ -49,6 +49,9 @@ Enemy::~Enemy() {
 }
 void Enemy::SetPlayerDist(void) {
     plrDistSqr = toPlr.SqrMagnitude();
+}
+void Enemy::Move(void) {
+    rb->AddForce(toPlr.Normalized() * speed);
 }
 void Enemy::EnactDamage(void) {
     if (!GetDebuffActive(confused)) {

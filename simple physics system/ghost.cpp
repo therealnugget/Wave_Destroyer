@@ -64,7 +64,7 @@ void Ghost::Update(void) {
         goto attack;
     }
     entity->SetAnimation(run);
-    rb->AddForce(toPlr.Normalized() * speed * Main::DefCapDeltaTime());
+    Move();
 ret:
     lastFramePlrClose = bPlrClose;
     touchingEnemy = false;

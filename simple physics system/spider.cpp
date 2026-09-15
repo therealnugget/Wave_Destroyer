@@ -52,7 +52,7 @@ void Spider::Update(void) {
         goto attack;
     }
     entity->SetAnimation(run);
-    rb->AddForce(toPlr.Normalized() * speed * Main::DefCapDeltaTime());
+    Move();
 ret:
     lastFramePlrAvoid = avoiding;
     touchingEnemy = false;

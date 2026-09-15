@@ -9,14 +9,15 @@ private:
 	static constexpr IntVec2 debuffDefaultOffset = IntVec2(155, 20);
 	static constexpr int default_boss_chance = 30;
 	static constexpr int default_num_minions = 5;
+	static constexpr int default_num_crystal_drop = 1;
+	static constexpr int boss_num_crystal_add = 4;
 	static constexpr float boss_health_multiplier = 3.f;
 	static constexpr float boss_damage_multiplier = 2.f;
 	static constexpr float boss_speed_multiplier = 1.5f;
-	static constexpr int boss_num_crystal_add = 2;
 	static constexpr float default_max_health = 3.f;
 	static constexpr float default_damage = 1.f;
 	static constexpr float default_self_damage = .5f;
-	static constexpr float default_speed = 19000000.f;
+	static constexpr float default_speed = 3000.f;
 	static constexpr float default_minion_spawn_time = 5.f;
 	static constexpr float default_minion_time_var = 3.f;
 	static const std::unordered_map<int, const char*> debuffPaths;
@@ -79,9 +80,12 @@ protected:
 	static inline const float GetDefaultSelfDamage(void) {
 		return default_self_damage;
 	}
-	//W seed - ur unc if u dont get the reference
-	static inline const  float GetDefaultSpeed(void) {
+	//W seed
+	static inline const float GetDefaultSpeed(void) {
 		return default_speed;
+	}
+	static inline const int GetDefaultNumCrystals(void) {
+		return default_num_crystal_drop;
 	}
 	static inline const IntVec2 GetDefaultDebugOffset(void) {
 		return debuffDefaultOffset;
@@ -106,8 +110,9 @@ protected:
 	static bool isSingleEnemy;
 	void SetPlayerDist(void);
 	void EnactDamage(void);
+	void Move(void);
 	virtual void CollisionCallback(Collision*);
-	Enemy(SubRBData, IntVec2 = debuffDefaultOffset, float max_health = default_max_health, float damage = default_damage, float selfDamage = default_self_damage, float speed = default_speed, int numColsOnFrame = default_num_cols_on_frame, bool isBoss = false, float _minionSpawnTime = default_minion_spawn_time, float _minionSpawnTimeVar = default_minion_time_var, int _numMinions = default_num_minions);
+	Enemy(SubRBData, IntVec2 = debuffDefaultOffset, float max_health = default_max_health, float damage = default_damage, float selfDamage = default_self_damage, float speed = default_speed, int numColsOnFrame = default_num_cols_on_frame, bool isBoss = false, float _minionSpawnTime = default_minion_spawn_time, float _minionSpawnTimeVar = default_minion_time_var, int _numMinions = default_num_minions, int _numCrystals = default_num_crystal_drop);
 	virtual void Update(void);
 	virtual void LateUpdate(void);
 	Node<std::function<void(void)>>* lateUpdateNode;

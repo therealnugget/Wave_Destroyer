@@ -150,6 +150,12 @@ public:
 	inline static Vector2 Max(Vector2<T> a, Vector2<T> b) {
 		return Vector2<T>(fmaxf(a.x, b.x), fmaxf(a.y, b.y));
 	}
+	inline static Vector2 Random(Vector2<T> a, Vector2<T> b) {
+		return Vector2<T>(Main::GetRandFloat(a.x, b.x), Main::GetRandFloat(a.y, b.y));
+	}
+	inline static Vector2 NormalRandom(Vector2<T> a, Vector2<T> b) {
+		return Random(a, b).Normalized();
+	}
 	inline void IntoRectXY(SDL_Rect *rect) {
 		rect->x = x;
 		rect->y = y;
@@ -635,7 +641,7 @@ public:
 	inline IntVec2 GetRenderOffset() {
 		return renderOffset;
 	}
-	inline void SetRenderOfffset(IntVec2 offset) {
+	inline void SetRenderOffset(IntVec2 offset) {
 		renderOffset = offset;
 	}
 private:

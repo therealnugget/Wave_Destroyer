@@ -101,19 +101,14 @@ private:
 		enemyTurner,
 		poison,
 		pickupRange,
+		healthRegen,
 		whirlPool,
 		wrath,
 		numItemTypes,
 	};
-	static constexpr bool itemCanRepeat[numItemTypes] = {
-		true,
-		false,
-		false,
-		true,
-		false,
-	};
+	//the number of times left that the item can spawn
+	static std::unordered_map<int, int> itemTimesLeft;
 	static std::vector<int> availableItemTypes;
-	Node<std::function<void(void)>>* renderUpdateNode;
 	static int itemTypes[numItems];
 	static int itemIndices[numItems];
 protected:
@@ -157,6 +152,15 @@ private:
 	float pickupIncrease;
 public:
 	PickupRange(int index) : pickupIncrease(.3f), Item(index, "increase_pickup_range", "increase pickup\nrange by 30%", IntVec2(11 * 4, 11 * 4)) {
+		SetOnSelect([this]() {OnSelect(); });
+	}
+};
+class HealthRegenIncrease final : public Item {
+private:
+	void OnSelect(void);
+	float healthRegenIncrease;
+public:
+	HealthRegenIncrease(int index) : healthRegenIncrease(1.f), Item(index, "health_regen_increase", "increase regen\nby 1 h/p/s", IntVec2(11 * 4, 11 * 4)) {
 		SetOnSelect([this]() {OnSelect(); });
 	}
 };

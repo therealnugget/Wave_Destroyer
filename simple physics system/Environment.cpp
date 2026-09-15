@@ -40,7 +40,7 @@ void Environment::LateUpdate(void) {
 	ResetTreePosExtents();
 	for (auto& tree : treeEntNodes) {
 		if (tree->value->GetRenderOffset().InRange(minRangeCheck, maxRangeCheck)) continue;
-		tree->value->SetRenderOfffset(RandTreePos());
+		tree->value->SetRenderOffset(RandTreePos());
 	}
 	if (Main::moving) lastInpVec = Main::fInputVec;
 }

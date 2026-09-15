@@ -16,12 +16,14 @@
 float Player::accel = 700000.f;
 float Player::speed = initSpeed;
 float Player::runSpeedMultAdd = 1.75f;
-float Player::knockBack = 30.0f;
+float Player::knockBack = 3000.0f;
 float Player::plrAttkET = .0f;
-float Player::maxHealth = 50.f;
+float Player::maxHealth = 70.f;
 float Player::health = Player::maxHealth;
+float Player::regenRate = .0f;
 float Player::crystalColldierSizeMult = 1.4f;
-float Player::staminaDecreaseSpeed = 4000.f;
+float Player::staminaDecreaseSpeed = 2500.f;
+float Player::staminaIncreaseSpeed = 12000.f;
 FVector2 Player::mouseDiff;
 const FVector2 Player::playerCollider = FVector2(.375f, .5f);
 const std::string Player::spear_base_path = "spear";
@@ -37,6 +39,7 @@ bool Player::mouseVertical;
 bool Player::colOnFrame = false;
 bool Player::enabled = true;
 bool Player::pastStaminaPositive = true;
+bool Player::canRegen = true;
 rbList* Player::plrNode;
 rbList* Player::plrAttack = nullptr;
 RigidBody *Player::player;
@@ -61,7 +64,8 @@ IntVec2 Player::plrAttkPos;
 FVector2 Main::defaultPlrPos;
 IntVec2 Main::defaultPlrPosI;
 float Player::maxProgress = 10.f;
-float Player::progressIncrease = 1.5f;
+float Player::progressIncreaseScale = 1.15f;
+float Player::progressIncreaseAdd = 10.f;
 float Player::progressAmount = .0f;
 float Player::projectileSpd = 600.f;
 float Player::damage = init_damage;
@@ -83,7 +87,7 @@ void Player::IncreaseProgress(float add) {
 		}
 		Main::TogglePauseState();
 		Main::canChangePause = false;
-		maxProgress *= progressIncrease;
+		maxProgress = maxProgress * progressIncreaseScale + progressIncreaseAdd;
 	}
 	progressBarEnt->SetSizeX((progressAmount) / maxProgress * static_cast<float>(progressBarInitSize.x));
 }
@@ -116,6 +120,9 @@ void Player::ReplenishHealth(void) {
 void Player::IncreasePickupRange(float increaseFactor) {
 	crystalColliderRb->ScaleNarrowPVert(1.f + increaseFactor);
 }
+void Player::IncreaseRegenRate(float increase) {
+	regenRate += increase;
+}
 void Player::Init(void) {
 	Main::defaultPlrPos = Main::halfDisplaySize + (static_cast<FVector2>(FVector2::Down) + FVector2::Left) * playerSizeFVec * .5f;
 	Main::defaultPlrPosI = static_cast<IntVec2>(Main::defaultPlrPos);
@@ -127,7 +134,7 @@ void Player::Init(void) {
 	crystalData.createEntity = false;
 	crystalCollider = Physics::SubscribeEntity(&crystalData);
 	crystalColliderRb = crystalCollider->value;
-	plrBehaviour = new Behaviour(SubRBData("main/Char_Sprites", Animations::MakeAnimStrs(numAnims, idle, "idle", run, "run", attack, "attack", hit, "hit"), static_cast<FVector2>(playerCollider) * Physics::DefaultSquareVerticesVec, defPlrPos, playerSize, std::initializer_list<FVector2>(), FVector2::Zero, -playerSize * .5f, Main::Tag::player, true));
+	plrBehaviour = new Behaviour(SubRBData("main/Char_Sprites", Animations::MakeAnimStrs(numAnims, idle, "idle", run, "run", attack, "attack", hit, "hit"), static_cast<FVector2>(playerCollider) * Physics::DefaultSquareVerticesVec, defPlrPos, playerSize, std::initializer_list<FVector2>(), FVector2::Zero, -playerSize * .5f, Main::Tag::player, true, nullptr));
 	plrNode = plrBehaviour->rbNode;
 	player = plrNode->value;
 	immuneTimer = Timer();
@@ -136,9 +143,6 @@ void Player::Init(void) {
 	player->SetTrigger(true);
 	player->updateNode = Main::Updates += Player::Update;
 	Main::LateUpdates += Player::LateUpdate;
-	player->SetCollisionCallback([](Collision *collision) -> void {
-
-		});
 	playerEnt = player->GetEntity();
 	PlayDirAnim(idle);
 	playerEnt->SetNotLoopDirs(Main::GetAnimOffset(hit));
@@ -235,13 +239,15 @@ void Player::Update(void) {
 		player->GetNarrowPhaseVertices()[j].PrintVec();*/
 	}
 #endif
+	health = std::min(health + regenRate * Main::DefCapDeltaTime() * canRegen, maxHealth);
 	healthBarEnt->SetAnimFrame(static_cast<int>(floorf(GetHealthFrac() * static_cast<float>(healthBarEnt->GetNumAnimFrames() - 1))));
 	auto stamina = staminaBarEnt->GetSizeX();
 	auto staminaPos = !!stamina;
 	auto isSprinting = Main::GetKey(SDL_SCANCODE_LSHIFT) && Main::moving && staminaPos;
 	auto dt = Main::DeltaTime();
 	if (stamina <= 0 && pastStaminaPositive) sprintCooldown.Reset();
-	staminaBarEnt->SetSizeX(std::clamp(stamina + static_cast<int>(staminaDecreaseSpeed * dt) * ((sprintCooldown.GetElapsedSeconds() >= sprint_cooldown_time && !isSprinting) * 2 - 1), 0, staminaBarInitSize.x));
+	auto staminaInactive = sprintCooldown.GetElapsedSeconds() >= sprint_cooldown_time && !isSprinting;
+	staminaBarEnt->SetSizeX(std::clamp(stamina + static_cast<int>((staminaDecreaseSpeed * !staminaInactive + staminaIncreaseSpeed * staminaInactive) * dt) * (staminaInactive * 2 - 1), 0, staminaBarInitSize.x));
 	pastStaminaPositive = staminaPos;
 	speed = (isSprinting * runSpeedMultAdd + 1.f) * initSpeed;
 	if (Main::GetKey(SDL_SCANCODE_O)) player->SetRotation(player->GetRotation() + rotationSpd * dt);

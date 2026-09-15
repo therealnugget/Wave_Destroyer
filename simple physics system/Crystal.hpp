@@ -15,6 +15,7 @@ private:
 	} CrytalAnimation;
 	constexpr static IntVec2 crystal_size = IntVec2(15, 15);
 	constexpr static float crystal_out_force = 3000.f;
+	constexpr static float crystal_spawn_force_mult = .3f;
 	constexpr static float crystal_destroy_dist = 23.f;
 	constexpr static float crystal_in_force_add = 200000000.f;
 	constexpr static float max_crystal_home_time = 2.5f;
@@ -65,6 +66,7 @@ public:
 		rb->SetVelocity(collision->GetNormal().Normalized() * crystal_out_force);
 		}, std::unordered_map<std::string, std::variant<FVector2, FVector2*>>(), std::unordered_map<std::string, bool>(), FVector2::Zero, .0, 1.0f, false, true, Main::empty_cc_init)) {
 		entity->SetNotLoop(collect);
+		rb->SetVelocity(FVector2::NormalRandom(FVector2::GetOne() * -1.0f, FVector2::GetOne()) * crystal_out_force * crystal_spawn_force_mult);
 		SetUpdateNode(Main::Updates += [this]() {Update(); });
 		rb->SetLayer(Main::Layer::playerLayer);
 	}

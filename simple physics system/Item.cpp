@@ -12,6 +12,15 @@ void Text::Update(void) {
 int Item::selectedItem = -1;
 int Item::itemTypes[Item::numItems];
 int Item::itemIndices[Item::numItems];
+std::unordered_map<int, int> Item::itemTimesLeft = std::unordered_map<int, int>{
+		{maxHealthAdd, 100},
+		{enemyTurner, 1},
+		{poison, 1},
+		{pickupRange, 250},
+		{healthRegen, 10},
+		{whirlPool, 1},
+		{wrath, 1},
+};
 void Item::Update(void) {
 	Text::Update();
 	Textures::RenderStandaloneTex(ItemImg);
@@ -28,7 +37,9 @@ void Item::Update(void) {
 selected:
 	if (selectedItem == itemIndex && onSelect) {
 		onSelect();
-		if (!itemCanRepeat[itemTypes[itemIndex]]) {
+		auto& curItemTimesLeft = itemTimesLeft[itemTypes[itemIndex]];
+		if (curItemTimesLeft > 1) curItemTimesLeft--;
+		else {
 			for (int i = itemIndices[itemIndex]; i < availableItemTypes.size() - 1; i++) {
 				availableItemTypes[i] = availableItemTypes[i + 1];
 			}
@@ -48,6 +59,9 @@ void MaxHealthAdd::OnSelect(void) {
 }
 void PickupRange::OnSelect(void) {
 	Player::IncreasePickupRange(pickupIncrease);
+}
+void HealthRegenIncrease::OnSelect(void) {
+	Player::IncreaseRegenRate(healthRegenIncrease);
 }
 const std::string EnemyTurner::startPath = "question mark";
 const char *EnemyTurner::endPath = "question mark";
@@ -82,6 +96,9 @@ void Item::MakeRandItem(int index) {
 		break;
 	case pickupRange:
 		new PickupRange(index);
+		break;
+	case healthRegen:
+		new HealthRegenIncrease(index);
 		break;
 	case whirlPool:
 		new Insignia(index);

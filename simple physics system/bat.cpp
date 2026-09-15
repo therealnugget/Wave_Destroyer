@@ -40,7 +40,7 @@ void Bat::Update(void) {
         goto attack;
     }
     entity->SetAnimation(run);
-    rb->AddForce(toPlr.Normalized() * speed * Main::DefCapDeltaTime());
+    Move();
 ret:
     touchingEnemy = false;
     entity->SetFlip(toPlr.x < .0f);

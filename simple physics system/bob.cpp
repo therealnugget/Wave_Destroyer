@@ -79,7 +79,7 @@ void SwordGuy::Update(void) {
     }
     ResetIfAttkFin(run);
 ret:
-    rb->AddForce(toPlr.Normalized() * speed * Main::DefCapDeltaTime());
+    Move();
     touchingEnemy = false;
     entity->SetFlip(toPlr.x < .0f);
 }

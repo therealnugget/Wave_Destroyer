@@ -3,7 +3,7 @@
 #include "physics.hpp"
 #include <SDL.h>
 #include "timer.hpp"
-#define IS_DEV
+//#define IS_DEV
 //static, therefore can't inherit from behaviour.
 class Player final {
 private:
@@ -13,7 +13,7 @@ private:
 	static constexpr float spearRotationOffset = 225.f;
 	static constexpr float immuneTime = .13f;
 	static constexpr float initSpeed = 650.f;
-	static constexpr float sprint_cooldown_time = 1.4f;
+	static constexpr float sprint_cooldown_time = .4f;
 	static constexpr float init_damage =
 #ifdef IS_DEV
 		1000.f
@@ -33,19 +33,23 @@ private:
 	static float plrAttkET;
 	static float maxHealth;
 	static float health;
+	static float regenRate;
 	static float accel, speed;
 	static float runSpeedMultAdd;
 	static float staminaDecreaseSpeed;
+	static float staminaIncreaseSpeed;
 	static float knockBack;
 	static float damage;
 	static float spearDamageMultiplier;
 	static float progressAmount;
 	static float maxProgress;
-	static float progressIncrease;
+	static float progressIncreaseScale;
+	static float progressIncreaseAdd;
 	static bool mouseVertical;
 	static bool colOnFrame;
 	static bool enabled;
 	static bool pastStaminaPositive;
+	static bool canRegen;
 	static Node<std::function<void(void)>>* updateNode;
 	static Timer immuneTimer;
 	static Timer sprintCooldown;
@@ -109,6 +113,7 @@ public:
 	static void RegenStamina(float);
 	static void IncreaseProgress(float);
 	static void IncreasePickupRange(float);
+	static void IncreaseRegenRate(float);
 	static void IncreaseHealth(float);
 	static void ReplenishHealth(void);
 	static void Init(void);
