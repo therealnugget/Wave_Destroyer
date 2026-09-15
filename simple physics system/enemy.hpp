@@ -12,6 +12,7 @@ private:
 	static constexpr float boss_health_multiplier = 3.f;
 	static constexpr float boss_damage_multiplier = 2.f;
 	static constexpr float boss_speed_multiplier = 1.5f;
+	static constexpr int boss_num_crystal_add = 2;
 	static constexpr float default_max_health = 3.f;
 	static constexpr float default_damage = 1.f;
 	static constexpr float default_self_damage = .5f;
@@ -40,12 +41,12 @@ private:
 	bool bIsBoss;
 	static std::vector<int> insigniaTagList;
 protected:
-	bool animFinished;
 	static constexpr IntVec2 debuffSize = { 40, 40 };
 	static constexpr int debuffSeparation = 25;
 	static constexpr int default_num_cols_on_frame = 5;
 	static constexpr float boss_size_increase = 2.f;
 	static float knockBack;
+	bool animFinished;
 	float health;
 	enum debuffType {
 		confused = 1,
@@ -100,6 +101,7 @@ protected:
 	float selfDamage;
 	FVector2 toPlr;
 	int curAnim;
+	int numCrystalsDrop;
 	static int numEnemies;
 	static bool isSingleEnemy;
 	void SetPlayerDist(void);

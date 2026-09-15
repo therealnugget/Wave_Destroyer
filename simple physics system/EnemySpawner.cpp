@@ -91,8 +91,11 @@ void EnemySpawner::Update(void) {
 	}
 }
 void EnemySpawner::DestroyEnemy(Node<Enemy*> *guy) {
-	auto c = new Crystal(guy->value->GetPosition());
- 	delete guy->value;
+	auto enemy = guy->value;
+	for (int i = 0; i < enemy->numCrystalsDrop; i++) {
+		new Crystal(enemy->GetPosition());
+	}
+ 	delete enemy;
 	Node<Enemy*>::Remove(&enemies, guy);
 }
 void EnemySpawner::Init(void) {
