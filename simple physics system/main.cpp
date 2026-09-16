@@ -260,7 +260,7 @@ SDL_DisplayMode Main::DM;
 FVector2 Main::DisplaySize;
 FVector2 Main::halfDisplaySize;
 IntVec2 Main::halfDisplaySizeI;
-FVector3 Main::renderDrawColor = FVector3(163.f, 215.f, 245.f);
+FVector3 Main::renderDrawColor = FVector3(174.f, 189.f, 66.f);
 std::vector<const char*> Main::dirPaths;
 void Main::Start() {
     SDL_GetCurrentDisplayMode(0, &DM);//if we start using multiple windows, this needs to be changed

@@ -10,7 +10,7 @@ for
 Demon_sword
 
 Credits go to:
-https://polar-34.itch.io	->		(https://creativecommons.org/publicdomain/zero/1.0/deed.en)
+https://polar-34.itch.io		->	(https://creativecommons.org/publicdomain/zero/1.0/deed.en)
 for
 Health Bars and Hearts
 
@@ -19,4 +19,14 @@ https://untiedgames.itch.io		->	(https://untiedgames.com/files/license.txt)
 for
 explosion effects
 
-changes were not made to the assets, but the work was built upon.
+Credits go to:
+https://hypnobius.itch.io		->	(N/A, free commercial & personal use)
+for
+shop UI
+
+Credits go to:
+https://ansimuz.itch.io			->	(N/A, Free for personal and commercial use)
+for
+shop
+
+changes were made to some assets, and all work was built upon.
