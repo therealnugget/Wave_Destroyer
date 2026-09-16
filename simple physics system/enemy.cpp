@@ -50,8 +50,9 @@ Enemy::~Enemy() {
 void Enemy::SetPlayerDist(void) {
     plrDistSqr = toPlr.SqrMagnitude();
 }
-void Enemy::Move(void) {
-    rb->AddForce(toPlr.Normalized() * speed);
+void Enemy::Move(FVector2 dir) {
+    if (dir == FVector2::NegInfinity) dir = toPlr.Normalized();
+    rb->AddForce(dir * speed);
 }
 void Enemy::EnactDamage(void) {
     if (!GetDebuffActive(confused)) {
@@ -65,7 +66,7 @@ void Enemy::EnactDamage(void) {
 void Enemy::LateUpdate(void) {
     for (auto& texRect : debuffTexes) {
         auto& confusedTex = texRect.second.texture;
-        Physics::SetRealPos(confusedTex.GetRectAddr(), entity, GetPosition() + static_cast<FVector2>(GetDebuffPos(texRect.second.index)), false);
+        if (entity) Physics::SetRealPos(confusedTex.GetRectAddr(), entity, GetPosition() + static_cast<FVector2>(GetDebuffPos(texRect.second.index)), false);
         Textures::RenderStandaloneTex(confusedTex);
     }
 }
@@ -87,7 +88,7 @@ void Enemy::AddDebuffTex(int debuff) {
     debuffTexes.emplace(debuff, Debuff(Textures::TextureRect(Textures::InitAnim(debuffPaths.at(debuff)), SDL_Rect{ debuffPos.x, debuffPos.y, debuffSize.x, debuffSize.y }), debuffTexSize));
 }
 void Enemy::OnDamaged(float damageAmount, FVector2 velocityChange) {
-    if (entity->GetCurAnim() == hurt && !entity->AnimFinished()) return;
+    if (entity && entity->GetCurAnim() == hurt && !entity->AnimFinished()) return;
 #ifdef DEBUG_BUILD
     if (!derivedTakeDamage) ThrowError("derivedTakeDamage of enemy base class has not been assigned in the derived class. please assign it to the base function of TakeDamage(float).");
 #endif
@@ -143,8 +144,10 @@ void Enemy::CollisionCallback(Collision* collision) {
 void Enemy::Update(void) {
     if (!enabled) return;
     for (auto& col : colsOnFrame) col.second = false;
-    curAnim = entity->GetCurAnim();
-    animFinished = entity->AnimFinished();
+    if (entity) {
+        curAnim = entity->GetCurAnim();
+        animFinished = entity->AnimFinished();
+    }
     toPlr = rb->GetPosition().To(Player::GetPosition());
     SetPlayerDist();
     if (bIsBoss && minionSpawnTimer->GetElapsedSeconds() > minionSpawnTime + minionSpawnTimeVariance) {

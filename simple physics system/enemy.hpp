@@ -17,7 +17,7 @@ private:
 	static constexpr float default_max_health = 3.f;
 	static constexpr float default_damage = 1.f;
 	static constexpr float default_self_damage = .5f;
-	static constexpr float default_speed = 3000.f;
+	static constexpr float default_speed = 30000.f;
 	static constexpr float default_minion_spawn_time = 5.f;
 	static constexpr float default_minion_time_var = 3.f;
 	static const std::unordered_map<int, const char*> debuffPaths;
@@ -110,7 +110,7 @@ protected:
 	static bool isSingleEnemy;
 	void SetPlayerDist(void);
 	void EnactDamage(void);
-	void Move(void);
+	void Move(FVector2 = FVector2::NegInfinity);
 	virtual void CollisionCallback(Collision*);
 	Enemy(SubRBData, IntVec2 = debuffDefaultOffset, float max_health = default_max_health, float damage = default_damage, float selfDamage = default_self_damage, float speed = default_speed, int numColsOnFrame = default_num_cols_on_frame, bool isBoss = false, float _minionSpawnTime = default_minion_spawn_time, float _minionSpawnTimeVar = default_minion_time_var, int _numMinions = default_num_minions, int _numCrystals = default_num_crystal_drop);
 	virtual void Update(void);
@@ -125,7 +125,7 @@ protected:
 		jump,
 		numEnemyAnims,
 	};
-	//strange, isn't it? a function that calls from the most derived to the base class. eù_e
+	//strange, isn't it? a function that calls from the base class to the most derived class. eù_e
 	std::function<void(float)> derivedTakeDamage;
 public:
 	inline static int GetNumEnemies(void){

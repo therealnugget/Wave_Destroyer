@@ -15,7 +15,7 @@ private:
 	};
 	static constexpr float attackDistSqr = 8000.f;
 	static constexpr float avoidanceDistSqr = 24000.f;
-	static constexpr float max_avoid_time_teleport = 7.f;
+	static constexpr float max_avoid_time_teleport = 3.f;
 	static constexpr float speed_mul_teleport_time = 1.f;
 	static constexpr float speed_teleport_factor = 1.4f;
 	static constexpr float teleport_out_factor = 80.f;

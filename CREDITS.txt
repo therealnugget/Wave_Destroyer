@@ -14,4 +14,9 @@ https://polar-34.itch.io	->		(https://creativecommons.org/publicdomain/zero/1.0/
 for
 Health Bars and Hearts
 
+Credits go to:
+https://untiedgames.itch.io		->	(https://untiedgames.com/files/license.txt)
+for
+explosion effects
+
 changes were not made to the assets, but the work was built upon.

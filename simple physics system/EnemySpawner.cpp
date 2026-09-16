@@ -2,6 +2,7 @@
 #include "bob.hpp"
 #include "bat.hpp"
 #include "ghost.hpp"
+#include "spinning blade.hpp"
 #include "multicast delegates.hpp"
 #include "Item.hpp"
 #include "Crystal.hpp"
@@ -19,7 +20,7 @@ int EnemySpawner::progressionIndex = -1;
 Text::TextData EnemySpawner::textData;
 float EnemySpawner::minPlrDist = FLT_MAX;
 Enemy* EnemySpawner::closestEnemy;
-const std::vector<int> EnemySpawner::enemyTypeProgression = { bob, bat, bob | bat, ghost, spider };
+const std::vector<int> EnemySpawner::enemyTypeProgression = { bob, bat, bob | bat, ghost, spinning_blade, spider };
 void EnemySpawner::DestroyWaveText(void) {
 	delete waveTextTimer;
 	waveTextTimer = nullptr;
@@ -44,6 +45,9 @@ Enemy *EnemySpawner::SpawnEnemy(int type, FVector2 position) {
 		break;
 	case spider:
 		returnVal = new Spider();
+		break;
+	case spinning_blade:
+		returnVal = new SpinningBlade();
 		break;
 	default:
 		ThrowError("unsupported enemy type");

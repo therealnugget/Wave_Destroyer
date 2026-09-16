@@ -38,6 +38,7 @@ public:
 		bat = 2,
 		ghost = 4,
 		spider = 8,
+		spinning_blade = 16,
 		numEnemyTypes = 4,
 	};
 	static Enemy *AddEnemy(int, FVector2 = FVector2::Infinity, bool canBeBoss = true);

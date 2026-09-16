@@ -124,7 +124,7 @@ void Player::IncreaseRegenRate(float increase) {
 	regenRate += increase;
 }
 void Player::Init(void) {
-	Main::defaultPlrPos = Main::halfDisplaySize + (static_cast<FVector2>(FVector2::Down) + FVector2::Left) * playerSizeFVec * .5f;
+	Main::defaultPlrPos = Main::halfDisplaySize + (static_cast<FVector2>(FVector2::Up) + FVector2::Left) * playerSizeFVec * .5f;
 	Main::defaultPlrPosI = static_cast<IntVec2>(Main::defaultPlrPos);
 	auto defPlrPos = Main::defaultPlrPos;
 	auto crystalData = SubRBData("", std::vector<const char*>(), playerSizeFVec * crystalColldierSizeMult * Physics::DefaultSquareVerticesVec, defPlrPos);

@@ -170,6 +170,7 @@
     <ClCompile Include="physics.cpp" />
     <ClCompile Include="PlayerProjectile.cpp" />
     <ClCompile Include="spider.cpp" />
+    <ClCompile Include="spinning blade.cpp" />
     <ClCompile Include="textures.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="InsigniaEquipped.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="player.hpp" />
     <ClInclude Include="PlayerProjectile.hpp" />
     <ClInclude Include="spider.hpp" />
+    <ClInclude Include="spinning blade.hpp" />
     <ClInclude Include="textures.hpp" />
     <ClInclude Include="debug.hpp" />
     <ClInclude Include="timer.hpp" />

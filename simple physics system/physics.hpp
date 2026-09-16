@@ -157,12 +157,12 @@ public:
 		return Random(a, b).Normalized();
 	}
 	inline void IntoRectXY(SDL_Rect *rect) {
-		rect->x = x;
-		rect->y = y;
+		rect->x = static_cast<int>(x);
+		rect->y = static_cast<int>(y);
 	}
 	inline void IntoRectWH(SDL_Rect* rect) {
-		rect->w = x;
-		rect->h = y;
+		rect->w = static_cast<int>(x);
+		rect->h = static_cast<int>(y);
 	}
 	inline bool InRange(Vector2 min, Vector2 max) {
 		auto& val = *this;
@@ -171,6 +171,9 @@ public:
 	//dot product (carret is more readable)
 	inline float operator ^(Vector2 b) {
 		return this->x * b.x + this->y * b.y;
+	}
+	inline Vector2 Perpendicular() {
+		return Vector2(-y, x);
 	}
 	//returns zero vector if magnitude is zero.
 	inline Vector2 Normalized() {
@@ -475,6 +478,7 @@ private:
 	SDL_Point* centreOfRotation;
 	bool bAffectedByCam;
 public:
+	//startPos is only used when affecyedByCam is false. (i.e. on screen space objects for start offsets.)
 	static Entity* MakeEntity(std::string basePath, std::vector<const char*> animPaths, FVector2 startPos, IntVec2 size, bool affectedByCam = false, IntVec2 renderOffset = IntVec2::Zero, std::initializer_list<const char*> dirPaths = {""}, float renderOffsetChangeX = .0f) {
 		auto data = SubRBData();
 		data.startPos = startPos + Main::defaultPlrPos;
@@ -919,18 +923,22 @@ public:
 	inline void SetSizeY(int sizeY) {
 		entity->rect->h = sizeY;
 	}
-	inline Entity *GetEntity() {
+	inline Entity *GetEntity(void) {
 		return entity;
 	}
+	inline void DestroyEntity(void) {
+		delete entity;
+		entity = nullptr;
+	}
 	//get coefficient of restitution
-	inline float GetCOR() {
+	inline float GetCOR(void) {
 		return coefRestitution;
 	}
-	inline double GetRotation() {
+	inline double GetRotation(void) {
 		return rotation;
 	}
 	//gets the centre of rotation for the narrow-phase collision's position vertices.
-	inline FVector2 GetCentreNarrowPVertRot() {
+	inline FVector2 GetCentreNarrowPVertRot(void) {
 		return centreOfNarrowPVertRot;
 	}
 	inline void SetCollisionCallback(std::function<void(Collision*)> callback) {
