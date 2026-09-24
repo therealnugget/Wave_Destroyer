@@ -2,11 +2,12 @@
 #include "player.hpp"
 #include "types.hpp"
 TTF_Font* Text::font = nullptr;
+bool Text::initializedText = false;
 MouseBounds Item::itemBounds[Item::numItems] = { {{756.f / 1920.f, 274.f / 1080.f}, {1165.f / 1920.f, 458.f / 1080.f}}, {{756.f / 1920.f, 458.f / 1080.f}, {1165.f / 1920.f, 643.f / 1080.f}}, {{756.f / 1920.f, 643.f / 1080.f}, {1165.f / 1920.f, 807.f / 1080.f}} };
 void Text::RenderText(void) {
 	SDL_RenderCopyEx(Main::renderer, texture, nullptr, rect, .0, GetPointOfRotationAddr(), SDL_FLIP_NONE);
 }
-void Text::Update(void) {
+void Text::LateUpdate(void) {
 	RenderText();
 }
 int Item::selectedItem = -1;
@@ -21,8 +22,8 @@ std::unordered_map<int, int> Item::itemTimesLeft = std::unordered_map<int, int>{
 		{whirlPool, 1},
 		{wrath, 1},
 };
-void Item::Update(void) {
-	Text::Update();
+void Item::LateUpdate(void) {
+	Text::LateUpdate();
 	Textures::RenderStandaloneTex(ItemImg);
 	if (!Main::leftClickOnFrame) return;
 	if (selectedItem == -1) {
@@ -69,11 +70,11 @@ const std::string EnemyTurner::fullPath = EnemyTurner::startPath + '/' + EnemyTu
 const std::string Poison::startPath = "poison";
 const char *Poison::endPath = "poison";
 const std::string Poison::fullPath = Poison::startPath + '/' + Poison::endPath;
-void EnemyTurner::Update(void) {
-	Item::Update();
+void EnemyTurner::LateUpdate(void) {
+	Item::LateUpdate();
 }
-void Poison::Update(void) {
-	Item::Update();
+void Poison::LateUpdate(void) {
+	Item::LateUpdate();
 }
 vector<int> Item::availableItemTypes;
 void Item::StaticInit(void) {

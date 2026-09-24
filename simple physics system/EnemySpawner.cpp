@@ -11,7 +11,7 @@
 int EnemySpawner::frameIndex;
 int EnemySpawner::numSelfSpawnedEnemies = 0;
 bool EnemySpawner::lastFrameEndWave = false;
-Node<Text*> *EnemySpawner::waveText = nullptr;
+Text* EnemySpawner::waveText;
 Timer* EnemySpawner::waveTextTimer = nullptr;
 Node<Enemy*> *EnemySpawner::enemies = nullptr;
 int EnemySpawner::waveIndex = 0;
@@ -24,8 +24,7 @@ const std::vector<int> EnemySpawner::enemyTypeProgression = { bob, bat, bob | ba
 void EnemySpawner::DestroyWaveText(void) {
 	delete waveTextTimer;
 	waveTextTimer = nullptr;
-	delete waveText->value;
-	Physics::UnSubText(waveText);
+	delete waveText;
 }
 Enemy *EnemySpawner::SpawnEnemy(int type, FVector2 position) {
 	Enemy* returnVal
@@ -74,12 +73,12 @@ void EnemySpawner::Update(void) {
 	if (waveTextTimer && waveTextTimer->GetElapsedSeconds() > waveTextDisappearTime) DestroyWaveText();
 	auto bIsEndWave = Enemy::GetNumEnemies() == 0;
 	if (bIsEndWave && !lastFrameEndWave) {
-		maxEnemies *= wave_num_enemy_mult;
+		maxEnemies = maxEnemies * wave_num_enemy_mult + wave_num_enemy_add;
 		progressionIndex = (progressionIndex + 1) % enemyTypeProgression.size();
 		numSelfSpawnedEnemies = 0;
 		if (waveTextTimer) DestroyWaveText();
 		textData.SetText("Wave " + std::to_string(++waveIndex));
-		waveText = Physics::SubText(new Text(&textData));
+		waveText = new Text(&textData);
 		waveTextTimer = new Timer();
 	}
 	lastFrameEndWave = bIsEndWave;

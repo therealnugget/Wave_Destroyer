@@ -52,8 +52,8 @@ void Spider::Update(void) {
         goto attack;
     }
     entity->SetAnimation(run);
-    Move();
 ret:
+    Move();
     lastFramePlrAvoid = avoiding;
     touchingEnemy = false;
     entity->SetFlip(toPlr.x < .0f);

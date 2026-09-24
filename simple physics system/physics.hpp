@@ -343,6 +343,9 @@ public:
 	inline Vector2 operator *(int b) const {
 		return Vector2(x * b, y * b);
 	}
+	inline Vector2 operator /(int b) const {
+		return Vector2(x / b, y / b);
+	}
 	inline Vector2 operator *(float b) const {
 		return Vector2(static_cast<float>(x) * b, static_cast<float>(y) * b);
 	}
@@ -445,7 +448,7 @@ struct SubRBData {
 private:
 	const static std::initializer_list<FVector2> DefaultSquareVerticesAsList;
 public:
-	SubRBData(std::string _basePath = Main::empty_string, std::vector<const char*> _animPaths = std::vector<const char*>(), std::vector<FVector2> _narrowPhaseVertices = DefaultSquareVerticesAsList, FVector2 _startPos = FVector2::Zero, IntVec2 _size = IntVec2::One, std::initializer_list<FVector2> _centreOfRot = std::initializer_list<FVector2>(), FVector2 _centreOfRotNPVert = FVector2::Zero, IntVec2 _renderOffset = IntVec2::Zero, int _tag = -1, bool isAffectedByCam = true, std::function<void(Collision*)> _collisionCallback = nullptr, std::unordered_map<std::string, std::variant<FVector2, FVector2*>> _imageSizes = std::unordered_map<std::string, std::variant<FVector2, FVector2*>>(), std::unordered_map<std::string, bool> _isGlobalSize = std::unordered_map<std::string, bool>(), FVector2 _initVel = FVector2::Zero, float _angle = .0f, float _mass = 1.f, bool _moveable = true, bool _isTrigger = false, std::initializer_list<const char*> _endPaths = std::initializer_list<const char*>(), bool _createEntity = true, float _renderOffsetChangeX = .0f, int_fast64_t _layer = Main::Layer::playerLayer, bool _neverSleep = false) : basePath(_basePath), animPaths(_animPaths), narrowPhaseVertices(_narrowPhaseVertices), startPos(_startPos), size(_size), centreOfRot(_centreOfRot), centreOfRotNPVert(_centreOfRotNPVert), renderOffset(_renderOffset), tag(_tag), collisionCallback(_collisionCallback), imageSizes(_imageSizes), isGlobalSize(_isGlobalSize), initVel(_initVel), angle(_angle), mass(_mass), moveable(_moveable), isTrigger(_isTrigger), endPaths(_endPaths), createEntity(_createEntity), renderOffsetChangeX(_renderOffsetChangeX), layer(_layer), bAffectedByCam(isAffectedByCam) {};
+	SubRBData(std::string _basePath = Main::empty_string, std::vector<const char*> _animPaths = std::vector<const char*>(), std::vector<FVector2> _narrowPhaseVertices = DefaultSquareVerticesAsList, FVector2 _startPos = FVector2::Zero, IntVec2 _size = IntVec2::One, std::initializer_list<FVector2> _centreOfRot = std::initializer_list<FVector2>(), FVector2 _centreOfRotNPVert = FVector2::Zero, IntVec2 _renderOffset = IntVec2::Zero, int _tag = -1, bool isAffectedByCam = true, std::function<void(Collision*)> _collisionCallback = nullptr, std::unordered_map<std::string, std::variant<FVector2, FVector2*>> _imageSizes = std::unordered_map<std::string, std::variant<FVector2, FVector2*>>(), std::unordered_map<std::string, bool> _isGlobalSize = std::unordered_map<std::string, bool>(), FVector2 _initVel = FVector2::Zero, float _angle = .0f, float _mass = 1.f, bool _moveable = true, bool _isTrigger = false, std::initializer_list<const char*> _endPaths = std::initializer_list<const char*>(), bool _createEntity = true, float _renderOffsetChangeX = .0f, int_fast64_t _layer = Main::Layer::playerLayer, bool _neverSleep = false, Main::RenderType _renderUnder = Main::RenderType::normal) : basePath(_basePath), animPaths(_animPaths), narrowPhaseVertices(_narrowPhaseVertices), startPos(_startPos), size(_size), centreOfRot(_centreOfRot), centreOfRotNPVert(_centreOfRotNPVert), renderOffset(_renderOffset), tag(_tag), collisionCallback(_collisionCallback), imageSizes(_imageSizes), isGlobalSize(_isGlobalSize), initVel(_initVel), angle(_angle), mass(_mass), moveable(_moveable), isTrigger(_isTrigger), endPaths(_endPaths), createEntity(_createEntity), renderOffsetChangeX(_renderOffsetChangeX), layer(_layer), bAffectedByCam(isAffectedByCam), renderType(_renderUnder) {};
 	std::string basePath;
 	std::vector<const char*> animPaths;
 	std::vector<FVector2> narrowPhaseVertices;
@@ -468,6 +471,7 @@ public:
 	bool moveable;
 	bool isTrigger;
 	bool bAffectedByCam;
+	Main::RenderType renderType;
 };
 //maybe only use this as a reference or ptr
 struct Entity : public Animator {
@@ -477,9 +481,10 @@ private:
 	SDL_RendererFlip flip;
 	SDL_Point* centreOfRotation;
 	bool bAffectedByCam;
+	Main::RenderType renderType;
 public:
-	//startPos is only used when affecyedByCam is false. (i.e. on screen space objects for start offsets.)
-	static Entity* MakeEntity(std::string basePath, std::vector<const char*> animPaths, FVector2 startPos, IntVec2 size, bool affectedByCam = false, IntVec2 renderOffset = IntVec2::Zero, std::initializer_list<const char*> dirPaths = {""}, float renderOffsetChangeX = .0f) {
+	//startPos is only used when affectedByCam is false. (i.e. on screen space objects for start offsets), and renderOffset is only used when affectedByCam is true.
+	static Entity* MakeEntity(std::string basePath, std::vector<const char*> animPaths, FVector2 startPos, IntVec2 size, bool affectedByCam = false, Main::RenderType renderType = Main::RenderType::normal, IntVec2 renderOffset = IntVec2::Zero, std::initializer_list<const char*> dirPaths = {""}, float renderOffsetChangeX = .0f) {
 		auto data = SubRBData();
 		data.startPos = startPos + Main::defaultPlrPos;
 		data.basePath = basePath;
@@ -489,11 +494,12 @@ public:
 		data.endPaths = dirPaths;
 		data.renderOffsetChangeX = renderOffsetChangeX;
 		data.bAffectedByCam = affectedByCam;
+		data.renderType = renderType;
 		return new Entity(&data);
 	}
 	//last boolean argument of image sizes is whether you're using the per-component size
 	//would be more efficient to have "image sizes" and "is global sizes" as one map, but it is more readable & maintainable to separate them into two.
-	Entity(SubRBData *data) : angle(data->angle), flip(SDL_FLIP_NONE), renderOffset(data->renderOffset), renderOffsetChangeX(data->renderOffsetChangeX), bAffectedByCam(data->bAffectedByCam), Animator() {
+	Entity(SubRBData *data) : angle(data->angle), flip(SDL_FLIP_NONE), renderOffset(data->renderOffset), renderOffsetChangeX(data->renderOffsetChangeX), bAffectedByCam(data->bAffectedByCam), renderType(data->renderType), Animator() {
 		/*
 		used values:
 		float _angle
@@ -1006,7 +1012,8 @@ private:
 	static int threadIndex;
 	static rbList *entityHead;
 	static Node<Entity *> *standaloneEntityHead;
-	static Node<Text*>* textHead;
+	static Node<Entity *> *standaloneEntityRenderUnderHead;
+	static Node<Entity *> *pausedEntityHead;
 	static rbListList *sortedEntityHeads;
 	static rbListList *unsortedEntityHeads;
 	static QuadNode<RigidBody*> quadRoot;
@@ -1046,8 +1053,6 @@ public:
 	static Node<RigidBody*>* SubscribeEntity(SubRBData *);
 	static Node<RigidBody*> *SubscribeEntity(RigidBody *);
 	static Node<Entity*>* SubStandaloneEnt(Entity*);
-	static Node<Text*>* SubText(Text*);
-	static Node<Text*>* UnSubText(Node<Text*>*);
 	static Node<Entity*>* SubStandaloneEnt(SubRBData *);
 	static Node<Entity*>* UnsubStandaloneEnt(Node<Entity*>*);
 	static void DeleteRB(rbList*);
@@ -1056,6 +1061,7 @@ public:
 	static void SetRealPos(SDL_Rect* rect, Entity*, FVector2 origPos, bool = true);
 	static void ProcessTexs(void);
 	static void Update(float dt);
+	static void PauseUpdate(float dt);
 	static void OuterBroadPhase(bool searchSorted = false);
 	static void SortEntity(QuadNode<RigidBody *>*, Node<RigidBody*>* entities, int currentDepth = 0);
 	static void DeleteQuadEntities(QuadNode<RigidBody*>*, bool isRoot = false);

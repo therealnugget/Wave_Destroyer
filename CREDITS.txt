@@ -29,4 +29,9 @@ https://ansimuz.itch.io			->	(N/A, Free for personal and commercial use)
 for
 shop
 
+Credits go to:
+https://hypnobius.itch.io/		->	(N/A, Use these assets for commercial (free or paid) and personal projects)
+for
+shop UI
+
 changes were made to some assets, and all work was built upon.

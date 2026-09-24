@@ -64,8 +64,8 @@ void Ghost::Update(void) {
         goto attack;
     }
     entity->SetAnimation(run);
-    Move();
 ret:
+    Move();
     lastFramePlrClose = bPlrClose;
     touchingEnemy = false;
     entity->SetFlip(toPlr.x < .0f);

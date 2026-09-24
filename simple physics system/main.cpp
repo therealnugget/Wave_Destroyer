@@ -30,6 +30,9 @@ bool Main::leftClick = false, Main::pastLeftClick = false;
 bool Main::leftClickOnFrame;
 bool Main::rightClick = false, Main::pastRightClick = false;
 bool Main::rightClickOnFrame;
+std::unordered_map<int, char> Main::scancode_to_char = {
+    { SDL_SCANCODE_E, 'e' },
+};
 IntVec2 Main::rawMousePosition;
 IntVec2 Main::GetMousePosition(void) {
     return rawMousePosition + Camera::GetCamPos() - static_cast<IntVec2>(defaultPlrPos);
@@ -260,7 +263,7 @@ SDL_DisplayMode Main::DM;
 FVector2 Main::DisplaySize;
 FVector2 Main::halfDisplaySize;
 IntVec2 Main::halfDisplaySizeI;
-FVector3 Main::renderDrawColor = FVector3(174.f, 189.f, 66.f);
+const tuple<float, float, float> Main::renderDrawColor = { 174.f, 189.f, 66.f };
 std::vector<const char*> Main::dirPaths;
 void Main::Start() {
     SDL_GetCurrentDisplayMode(0, &DM);//if we start using multiple windows, this needs to be changed
@@ -331,26 +334,21 @@ int main(int argc, char* args[])
     Physics::Init();
     Item::StaticInit();
     Environment::Init();
-#define IMPLEMENTED_CHESTS
-#ifdef IMPLEMENTED_CHESTS
     ChestSpawner::Init();
-#endif
     double tempDTCumulative = .0;
     uint tempDTIndex = 0;
     Main::StartDTCounter();
     SDL_GetMouseState(&Main::rawMousePosition.x, &Main::rawMousePosition.y);
     do {
         SDL_RenderClear(Main::renderer);
-        if (Main::timeScale == .0f) {
+        if (Main::IsPaused()) {
             Main::RegisterInput();
             if (Main::canChangePause) Main::CheckPauseState();
             Main::PauseUpdates();
+            Physics::PauseUpdate(Main::DefCapDeltaTime());
         pause_screen:
             Main::ClearInput();
-            Main::StartDTCounter();
-            Main::LateUpdate();
-            SDL_Delay(afk_sleep_time);
-            continue;
+            goto end_of_frame;
         }
         //all normal behaviours after early update and before physics::update().
         Main::EarlyUpdate();
@@ -365,6 +363,7 @@ int main(int argc, char* args[])
         tempDTCumulative += static_cast<double>(Main::DeltaTime());
         tempDTIndex++;
 #endif
+    end_of_frame:
         Main::LateUpdate();
         Main::StartDTCounter();
         SDL_Delay(1);

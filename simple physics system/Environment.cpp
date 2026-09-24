@@ -2,23 +2,38 @@
 #include "multicast delegates.hpp"
 #include "camera.hpp"
 Node<std::function<void(void)>>* Environment::lateUpdateNode = nullptr;
+Node<std::function<void(void)>>* Environment::updateNode = nullptr;
 Node<Entity*>* Environment::treeEntNodes[Environment::numTrees];
+Shop* Environment::shop = nullptr;
+Timer Environment::shopTimer;
 FVector2 Environment::lastInpVec = FVector2::Zero;
 IntVec2 Environment::minTreePos;
 IntVec2 Environment::maxTreePos;
-IntVec2 Environment::RandTreePos(void) {
+IntVec2 Environment::RandOffScreenPos(void) {
 	auto randPos = Main::GetRandIVec(Camera::GetCamExtentWorld(-1.f), Camera::GetCamExtentWorld(1.f)) + GetRandExtentInput();
 	Main::AssignIfLess(randPos, minTreePos);
 	Main::AssignIfMore(randPos, maxTreePos);
 	return randPos;
 }
-IntVec2 Environment::GetRandExtentInput() {
+IntVec2 Environment::GetRandExtentInput(void) {
 	return Main::halfDisplaySizeI * lastInpVec * 2;
 }
+void Environment::OnShopDestroy(void) {
+	shop = nullptr;
+}
+void Environment::Update(void) {
+	if (shopTimer.GetElapsedSeconds() > shop_time) {
+		shopTimer.Reset();
+		if (!shop) shop = new Shop();
+	}
+	if (shop) shop->Update();
+}
 void Environment::Init(void) {
+	shopTimer.Reset(shop_time * spawn_shop_at_start);
 	lateUpdateNode = (Main::LateUpdates += []() {LateUpdate(); });
+	updateNode = (Main::Updates += Update);
 	for (auto &tree: treeEntNodes) {
-		tree = Physics::SubStandaloneEnt(Entity::MakeEntity("environment", { "green tree" }, FVector2::Zero, treeSize, true, RandTreePos()));
+		tree = Physics::SubStandaloneEnt(Entity::MakeEntity("environment", { "green tree" }, FVector2::Zero, treeSize, true, Main::RenderType::renderUnder, RandOffScreenPos() - static_cast<FVector2>(treeSize) * .5f));
 	}
 }
 void Environment::ResetTreePosExtents(void) {
@@ -40,7 +55,7 @@ void Environment::LateUpdate(void) {
 	ResetTreePosExtents();
 	for (auto& tree : treeEntNodes) {
 		if (tree->value->GetRenderOffset().InRange(minRangeCheck, maxRangeCheck)) continue;
-		tree->value->SetRenderOffset(RandTreePos());
+		tree->value->SetRenderOffset(RandOffScreenPos());
 	}
 	if (Main::moving) lastInpVec = Main::fInputVec;
 }

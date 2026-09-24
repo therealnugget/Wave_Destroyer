@@ -169,6 +169,7 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="physics.cpp" />
     <ClCompile Include="PlayerProjectile.cpp" />
+    <ClCompile Include="shop.cpp" />
     <ClCompile Include="spider.cpp" />
     <ClCompile Include="spinning blade.cpp" />
     <ClCompile Include="textures.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="physics.hpp" />
     <ClInclude Include="player.hpp" />
     <ClInclude Include="PlayerProjectile.hpp" />
+    <ClInclude Include="shop.hpp" />
     <ClInclude Include="spider.hpp" />
     <ClInclude Include="spinning blade.hpp" />
     <ClInclude Include="textures.hpp" />

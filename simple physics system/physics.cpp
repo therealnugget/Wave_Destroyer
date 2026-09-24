@@ -11,9 +11,9 @@
 #include "camera.hpp"
 rbList *Physics::entityHead = nullptr;
 Node<Entity *> *Physics::standaloneEntityHead = nullptr;
-Node<Text *> *Physics::textHead = nullptr;
+Node<Entity *> *Physics::standaloneEntityRenderUnderHead = nullptr;
+Node<Entity *> *Physics::pausedEntityHead = nullptr;
 static Node<Entity*>* curStandalone;
-static Node<Text*>* curText;
 rbListList *Physics::sortedEntityHeads = nullptr;
 rbListList *Physics::unsortedEntityHeads = nullptr;
 EmptyStack<RigidBody*> Physics::sortedCacheNodes = EmptyStack<RigidBody *>();
@@ -50,21 +50,28 @@ Node<RigidBody*> *Physics::SubscribeEntity (RigidBody *rb){
 	return Node<RigidBody*>::AddAtHead(rb, &entityHead);
 }
 Node<Entity*>* Physics::SubStandaloneEnt(Entity* entity) {
-	return Node<Entity*>::AddAtHead(entity, &standaloneEntityHead);
-}
-Node<Text*>* Physics::SubText(Text* text) {
-	return Node<Text*>::AddAtHead(text, &textHead);
-}
-//doesn't delete value of node
-Node<Text*>* Physics::UnSubText(Node<Text*> *text) {
-	return Node<Text*>::Remove(&textHead, text);
-}
-Node<Entity*>* Physics::SubStandaloneEnt(SubRBData *data) {
-	return SubStandaloneEnt(new Entity(data));
+	switch (entity->renderType) {
+	case Main::RenderType::normal:
+		return Node<Entity*>::AddAtHead(entity, &standaloneEntityHead);
+	case Main::RenderType::renderUnder:
+		return Node<Entity*>::AddAtHead(entity, &standaloneEntityRenderUnderHead);
+	case Main::RenderType::renderWhenPaused:
+		return Node<Entity*>::AddAtHead(entity, &pausedEntityHead);
+	}
 }
 //deletes value of node
 Node<Entity*>* Physics::UnsubStandaloneEnt(Node<Entity*>* remove) {
-	return Node<Entity*>::RemoveWVal(&standaloneEntityHead, remove);
+	switch (remove->value->renderType) {
+	case Main::RenderType::normal:
+		return Node<Entity*>::RemoveWVal(&standaloneEntityHead, remove);
+	case Main::RenderType::renderUnder:
+		return Node<Entity*>::RemoveWVal(&standaloneEntityRenderUnderHead, remove);
+	case Main::RenderType::renderWhenPaused:
+		return Node<Entity*>::RemoveWVal(&pausedEntityHead, remove);
+	}
+}
+Node<Entity*>* Physics::SubStandaloneEnt(SubRBData *data) {
+	return SubStandaloneEnt(new Entity(data));
 }
 void Physics::UnSubscribeEntity(rbList* node) {
 	rbList::Remove(&entityHead, node);
@@ -497,6 +504,15 @@ void Physics::ProcessTexs(void) {
 	if (!currentEntity || !currentEntity->bRecordAnim) return;
 	currentEntity->pastAnimation = currentEntity->currentAnimation;
 }
+void Physics::PauseUpdate(float dt) {
+	curStandalone = pausedEntityHead;
+	while (curStandalone) {
+		currentRB = nullptr;
+		currentEntity = curStandalone->value;
+		ProcessTexs();
+		Node<Entity*>::Advance(&curStandalone);
+	}
+}
 void Physics::Update(float dt) {
 	curNode = entityHead;
 	fricCoefByDT = fricCoef * dt;
@@ -592,6 +608,13 @@ void Physics::Update(float dt) {
 		frameInd = 0;
 	}
 	Main::LateUpdates();
+	curStandalone = standaloneEntityRenderUnderHead;
+	while (curStandalone) {
+		currentRB = nullptr;
+		currentEntity = curStandalone->value;
+		ProcessTexs();
+		Node<Entity*>::Advance(&curStandalone);
+	}
 	curNode = entityHead;
 	while (curNode) {
 		currentRB = curNode->value;
@@ -610,11 +633,6 @@ void Physics::Update(float dt) {
 		currentEntity = curStandalone->value;
 		ProcessTexs();
 		Node<Entity*>::Advance(&curStandalone);
-	}
-	curText = textHead;
-	while (curText) {
-		curText->value->RenderText();
-		Node<Text*>::Advance(&curText);
 	}
 #ifdef SHOW_QUAD_TREE
 	SDL_SetRenderDrawColor(Main::renderer, 0, 0, 0, 255);

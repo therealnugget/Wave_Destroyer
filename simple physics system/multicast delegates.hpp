@@ -4,25 +4,27 @@
 #include "usefulTypedefs.hpp"
 #include "main.hpp"
 template<typename T>
-class MultiDelegate;
-template<typename T>
 class MultiDelegate {
 private:
+	Node<std::function<void(T)>>* curNode;
 	Node<std::function<void(T)>>* delegates = nullptr;
+	bool removedOnFrame = false;
 public:
-	inline Node<std::function<void(T)>> * operator +=(std::function<void(T)> del) {
+	inline Node<std::function<void(T)>>* operator +=(std::function<void(T)> del) {
 		return Node<std::function<void(T)>>::AddAtHead(del, &delegates);
 	}
-	void operator ()(T param);
-};
-template<typename T>
-void MultiDelegate<T>::operator ()(T param) {
-	auto head = delegates;
-	while (head) {
-		head->value(param);
-		Node<std::function<void(T)>>::Advance(&head);
+	inline Node<std::function<void(T)>>* AddAtTail(std::function<void(T)> del) {
+		return Node<std::function<void(T)>>::AddAtTail(del, &delegates);
 	}
-}
+	inline void operator -=(Node<std::function<void(T)>>* node) {
+		if (curNode == node) {
+			Node<std::function<void(T)>>::Advance(&curNode);
+			removedOnFrame = true;
+		}
+		Node<std::function<void(T)>>::Remove(&delegates, node);
+	}
+	void operator ()(T);
+};
 template<>
 class MultiDelegate<void>;
 template<>
@@ -35,7 +37,9 @@ public:
 	inline Node<std::function<void(void)>>* operator +=(std::function<void(void)> del) {
 		return Node<std::function<void(void)>>::AddAtHead(del, &delegates);
 	}
-	//could have simplified this for the developer by checking if a function is equal to any function in the list by linearly probing through, but the time complexity is O(n) and i prefer performance to developer ease-of-use
+	inline Node<std::function<void(void)>>* AddAtTail(std::function<void(void)> del) {
+		return Node<std::function<void(void)>>::AddAtTail(del, &delegates);
+	}
 	inline void operator -=(Node<std::function<void(void)>>* node) {
 		if (curNode == node) {
 			Node<std::function<void(void)>>::Advance(&curNode);
@@ -43,5 +47,17 @@ public:
 		}
 		Node<std::function<void(void)>>::Remove(&delegates, node);
 	}
-	void operator ()();
+	void operator ()(void);
 };
+template <typename T>
+void MultiDelegate<T>::operator ()(T t) {
+	curNode = delegates;
+	while (curNode) {
+		curNode->value(t);
+		if (removedOnFrame) {
+			removedOnFrame = false;
+			continue;
+		}
+		Node<std::function<void(T)>>::Advance(&curNode);
+	}
+}

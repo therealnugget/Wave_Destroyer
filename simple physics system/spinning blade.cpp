@@ -7,6 +7,7 @@
 static constexpr float spinScale = 1.3f;
 static constexpr FVector2 spinSize = FVector2(16.f * 2.f * spinScale, 16.f * 2.f * spinScale);
 constexpr static float border = .1f;
+float SpinningBlade::toPlrScale = .65f;
 int SpinningBlade::bossChance = Enemy::GetDefaultBossChance();
 int SpinningBlade::numExplosions = 0;
 const float SpinningBlade::explosion_damage = Enemy::GetDefaultDamage() + add_explosion_damage;
@@ -28,7 +29,6 @@ void SpinningBlade::SetAnim(int anim) {
     entity->SetAnimation(anim);
 }
 void SpinningBlade::Update(void) {
-    Enemy::Update();
     if (health <= .0f) {
         rb->SetVelocity(FVector2::Zero);
         if (entity) {
@@ -47,13 +47,14 @@ void SpinningBlade::Update(void) {
             EnemySpawner::DestroyEnemy(enemySpawnNode);
             return;
         }
-        explosionNode = Physics::SubStandaloneEnt(Entity::MakeEntity("explosion/round_vortex", { "explosion" }, FVector2::Zero, explosionSize, true, GetPosition() + explosionSize * -.5f, Main::empty_cc_init, .0f));
+        explosionNode = Physics::SubStandaloneEnt(Entity::MakeEntity("explosion/round_vortex", { "explosion" }, FVector2::Zero, explosionSize, true, Main::RenderType::renderUnder, GetPosition() + explosionSize * -.5f, Main::empty_cc_init, .0f));
         auto animator = explosionNode->value;
         constexpr int explosion_animation = 0;
         if (entity) {
             rb->DestroyEntity();
             entity = nullptr;
         }
+        UnsubscribeLateUpdate();
         rb->ScaleNarrowPVert(explosionColliderScale);
         rb->SetLayer(Main::Layer::crystalLayer);
         rb->SetTrigger(true);
@@ -66,6 +67,7 @@ void SpinningBlade::Update(void) {
         numExplosions++;
         return;
     }
+    Enemy::Update();
     if (curAnim == hurt && !animFinished) return;
     if (plrDistSqr < attackDistSqr) {
     attack:
@@ -76,8 +78,9 @@ void SpinningBlade::Update(void) {
         goto attack;
     }
     SetAnim(idle);
-    Move((toPlr * toPlrScale + toPlr.Perpendicular() * toPlrPerpScale).Normalized());
 ret:
+    Move((toPlr * toPlrScale + toPlr.Perpendicular() * (1.f - toPlrScale)).Normalized());
+    toPlrScale -= toPlrScaleDecreaseSpd * Main::DeltaTime();
     touchingEnemy = false;
     if (!entity) return;
     entity->SetFlip(toPlr.x < .0f);

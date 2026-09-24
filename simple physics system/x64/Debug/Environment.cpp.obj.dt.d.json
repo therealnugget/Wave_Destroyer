@@ -306,7 +306,17 @@
             "c:\\program files\\microsoft visual studio\\18\\community\\vc\\tools\\msvc\\14.44.35207\\include\\unordered_set",
             "c:\\program files\\microsoft visual studio\\18\\community\\vc\\tools\\msvc\\14.44.35207\\include\\stack",
             "c:\\program files\\microsoft visual studio\\18\\community\\vc\\tools\\msvc\\14.44.35207\\include\\deque",
-            "c:\\users\\drago\\source\\repos\\top-down-wave-game\\simple physics system\\multicast delegates.hpp"
+            "c:\\users\\drago\\source\\repos\\top-down-wave-game\\simple physics system\\timer.hpp",
+            "c:\\users\\drago\\source\\repos\\top-down-wave-game\\simple physics system\\shop.hpp",
+            "c:\\users\\drago\\source\\repos\\top-down-wave-game\\simple physics system\\includes\\sdl_ttf.h",
+            "c:\\users\\drago\\source\\repos\\top-down-wave-game\\simple physics system\\includes\\begin_code.h",
+            "c:\\users\\drago\\source\\repos\\top-down-wave-game\\simple physics system\\includes\\close_code.h",
+            "c:\\users\\drago\\source\\repos\\top-down-wave-game\\simple physics system\\item.hpp",
+            "c:\\users\\drago\\source\\repos\\top-down-wave-game\\simple physics system\\multicast delegates.hpp",
+            "c:\\users\\drago\\source\\repos\\top-down-wave-game\\simple physics system\\playerprojectile.hpp",
+            "c:\\users\\drago\\source\\repos\\top-down-wave-game\\simple physics system\\math.hpp",
+            "c:\\users\\drago\\source\\repos\\top-down-wave-game\\simple physics system\\insigniaequipped.hpp",
+            "c:\\users\\drago\\source\\repos\\top-down-wave-game\\simple physics system\\player.hpp"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

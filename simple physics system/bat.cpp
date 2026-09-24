@@ -41,8 +41,8 @@ void Bat::Update(void) {
         goto attack;
     }
     entity->SetAnimation(run);
-    Move();
 ret:
+    Move();
     touchingEnemy = false;
     entity->SetFlip(toPlr.x < .0f);
 }

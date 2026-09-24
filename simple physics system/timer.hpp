@@ -10,7 +10,7 @@ public:
 		bUseTimeScale = useTimeScale;
 	}
 	inline float GetElapsedSeconds() {
-		return static_cast<float>(SDL_GetPerformanceCounter() - pastTime) / Main::frequency * (Main::timeScale * bUseTimeScale + !bUseTimeScale);
+		return static_cast<float>(SDL_GetPerformanceCounter() - pastTime) / Main::frequency * (Main::GetTimeScale() * bUseTimeScale + !bUseTimeScale);
 	}
 	inline void PrintElapsedSeconds(const char *initMessage = Main::empty_cc) {
 		std::cout << initMessage << ' ' << GetElapsedSeconds() << std::endl;

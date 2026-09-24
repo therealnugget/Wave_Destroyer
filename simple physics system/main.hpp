@@ -53,9 +53,13 @@ public:
 	static void RemoveAllNodes(Node** head, bool freeNodes = true);
 	static void RemoveAllNodesWVal(Node** head, bool freeNodes = true);
 	static Node* &AddAtHead(T&, Node** head);
+	//O(n)
+	static Node* &AddAtTail(T&, Node** head);
 	static Node* &AddAtHeadByVal(T, Node** head);
 	static Node* &AddAtHeadEmpty(Node** head, Node*);
 	static Node* &AddAtHead(T&, Node** head, Node *preConstructed);
+	//O(n)
+	static Node* &AddAtTail(T&, Node** head, Node *preConstructed);
 	//the ptr returned is only useful if you don't delete the node. 
 	static Node* Remove(Node** head, Node* remove, bool freeNode = true);
 	static Node* RemoveWVal(Node** head, Node* remove, bool freeNode = true);
@@ -109,6 +113,11 @@ Node<T>* &Node<T>::AddAtHead(T &val, Node<T>** head) {
 	return AddAtHead(val, head, _this);
 }
 template <typename T>
+Node<T>* &Node<T>::AddAtTail(T &val, Node<T>** head) {
+	Node<T>* _this = new Node<T>();
+	return AddAtTail(val, head, _this);
+}
+template <typename T>
 Node<T>* &Node<T>::AddAtHeadByVal(T val, Node<T>** head) {
 	Node<T>* _this = new Node<T>();
 	return AddAtHead(val, head, _this);
@@ -119,6 +128,23 @@ Node<T>* &Node<T>::AddAtHead(T &val, Node<T>** head, Node<T> *preConstructedNode
 	preConstructedNode->prev = nullptr;
 	preConstructedNode->next = *head;
 	if (*head) (*head)->prev = preConstructedNode;
+	*head = preConstructedNode;
+	return preConstructedNode;
+}
+template <typename T>
+Node<T>*& Node<T>::AddAtTail(T& val, Node<T>** head, Node<T>* preConstructedNode) {
+	preConstructedNode->value = val;
+	preConstructedNode->next = nullptr;
+	if (*head) {
+		Node<T>* curHead = *head;
+		while (curHead->next) {
+			Node<T>::Advance(&curHead);
+		}
+		curHead->next = preConstructedNode;
+		preConstructedNode->prev = curHead;
+		return preConstructedNode;
+	}
+	preConstructedNode->prev = nullptr;
 	*head = preConstructedNode;
 	return preConstructedNode;
 }
@@ -347,6 +373,11 @@ template<>
 class MultiDelegate<void>;
 class Main {
 public:
+	typedef enum RenderType {
+		normal = 0,
+		renderUnder = 1,
+		renderWhenPaused = 2,
+	};
 	//least significant bit assigned for whether the collider will collide with itself
 	static enum Layer {
 		playerLayer = 0b0110,
@@ -440,7 +471,6 @@ public:
 	static float DeltaTime();
 	static float CapDeltaTime(float &);
 	static float DefCapDeltaTime();
-	static float timeScale;
 	static Uint64 pastTime;
 	static float frequency;
 	inline static void StartDTCounter() {
@@ -459,7 +489,7 @@ public:
 	static void LateUpdate(void);
 	static void Start(void);
 	static void Finalize(void);
-	static FVector3 renderDrawColor;
+	static const std::tuple<float, float, float> renderDrawColor;
 	template<typename T>
 	static inline void Swap(T& a, T& b) {
 		T t = a;
@@ -516,11 +546,25 @@ public:
 		if (check <= assignConditionally) return;
 		assignConditionally = check;
 	}
+	static inline void SetBackgroundColor(const std::tuple<float, float, float>& color) {
+		SDL_SetRenderDrawColor(Main::renderer, std::get<0>(color), std::get<1>(color), std::get<2>(color), 255);
+	}
+	static inline float GetTimeScale(void) {
+		return Main::timeScale;
+	}
+	static inline bool IsPaused(void) {
+		return Main::timeScale == .0f;
+	}
 	static inline void SetPauseState(bool state) {
 		Main::timeScale = !state;
+		if (!Main::timeScale) return;
+		SetBackgroundColor(Main::renderDrawColor);
 	}
 	static inline void TogglePauseState() {
 		SetPauseState(Main::timeScale);
+	}
+	static const inline char GetScancodeCharacter(int scancode) {
+		return scancode_to_char[scancode];
 	}
 	//it is NOT the case that both x and y have to be bigger for "assignConditionally" to be assigned. either-or per-component.
 	static void AssignIfMore(Vector2<float>& check, Vector2<float>& assignConditionally);
@@ -561,6 +605,7 @@ private:
 		input_last = input_left,
 		num_inp_dirs = 4,
 	};
+	static std::unordered_map<int, char> scancode_to_char;
 	static SDL_Event e;
 	//whether the key in the direction is being pressed this frame but not last frame
 	static bool dirKeyPress[num_inp_dirs];
@@ -586,6 +631,7 @@ private:
 	static bool pressedKey[];//^^ that of last frame
 	static bool pressingModKey[];
 	static bool pressedModKey[];
+	static float timeScale;
 	static float invRefreshRate;
 	static int currentTag;
 	//static constexpr float defCapMultiplier = .1f;
@@ -638,6 +684,10 @@ Node<T>* Node<T>::Remove(Node<T>** head, Node<T>* remove, bool freeNode) {
 		*head = next;
 	}
 	if (!freeNode) return remove;
+#ifdef DEBUG_BUILD
+	remove->prev = nullptr;
+	remove->next = nullptr;
+#endif
 	delete remove;
 	//i'm pretty sure it returns nullptr anyway, but it's better practice to explicitly return nullptr
 	return nullptr;

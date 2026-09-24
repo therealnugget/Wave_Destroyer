@@ -3,6 +3,7 @@
 #include "physics.hpp"
 #include "timer.hpp"
 #include <unordered_map>
+#include "multicast delegates.hpp"
 class SwordGuy;
 class Enemy : public Behaviour {
 private:
@@ -116,6 +117,12 @@ protected:
 	virtual void Update(void);
 	virtual void LateUpdate(void);
 	Node<std::function<void(void)>>* lateUpdateNode;
+	//don't unsubscribe directly; use this method instead.
+	inline void UnsubscribeLateUpdate(void) {
+		if (!lateUpdateNode) return;
+		Main::LateUpdates -= lateUpdateNode;
+		lateUpdateNode = nullptr;
+	}
 	enum EnemyAnimation {
 		idle,
 		death,

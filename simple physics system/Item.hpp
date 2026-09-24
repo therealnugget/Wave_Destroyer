@@ -14,22 +14,28 @@ private:
 	static TTF_Font* font;
 	static constexpr int defaultTextSize = 100;
 	static constexpr const char* fontPath = "fonts/Pixie.ttf";
+	static bool initializedText;
 	SDL_Surface *surface;
 	SDL_Texture *texture;
 	SDL_Rect* rect;
-	Node<std::function<void(void)>>* updateNode;
+	typedef union UpdateNodeUnion {
+		Node<std::function<void(void)>> *regularUpd;
+		Node<std::function<void(float)>> *deltaTimeUpd;
+	};
+	UpdateNodeUnion lateUpdateNode;
 	bool bIsPauseText;
 	static constexpr SDL_Point pointOfRotation = {};
 public:
 	struct TextData {
 	private:
 		IntVec2 size;
-		IntVec2 position;
 		std::string text;
 		bool bIsPauseText;
+		bool bSubLateUpdate;
 	public:
+		IntVec2 position;
 		TextData(){}
-		TextData(IntVec2 _size, IntVec2 startPos, std::string textDisplay, bool isPauseText = false) : size(_size), position(startPos), text(textDisplay), bIsPauseText(isPauseText) {
+		TextData(IntVec2 _size, IntVec2 startPos, std::string textDisplay, bool isPauseText = false, bool subLateUpdate = true) : size(_size), position(startPos), text(textDisplay), bIsPauseText(isPauseText), bSubLateUpdate(subLateUpdate) {
 
 		}
 		inline void SetText(std::string newText) {
@@ -41,45 +47,61 @@ protected:
 	const SDL_Point *GetPointOfRotationAddr() {
 		return &pointOfRotation;
 	}
-	inline void SetUpdateNode(Node<std::function<void(void)>>* node) {
-		updateNode = node;
+	inline void SetLateUpdateNode(Node<std::function<void(void)>>* node) {
+		lateUpdateNode.regularUpd = node;
+	}
+	inline void SetLateUpdateNode(Node<std::function<void(float)>>* node) {
+		lateUpdateNode.deltaTimeUpd = node;
 	}
 	//assumes img is already initialized, etc.
 	void Init(TextData* data) {
 		rect = new SDL_Rect();
 		bIsPauseText = data->bIsPauseText;
-		if (!bIsPauseText) SetUpdateNode(Main::Updates += [this]() {Update(); });
+		if (data->bSubLateUpdate) {
+			if (bIsPauseText) SetLateUpdateNode(Main::PauseUpdates.AddAtTail([this]() {LateUpdate(); }));
+			else SetLateUpdateNode(Main::dtUpdates.AddAtTail([this](float _) {LateUpdate();}));
+		}
 		auto& size = data->size;
 		size.IntoRectWH(rect);
 		(data->position - size * .5f).IntoRectXY(rect);
 		if (!font) {
-			if (TTF_Init() == -1) ThrowError("ttf couldn't initialize: ", TTF_GetError());
+			if (!initializedText && TTF_Init() == -1) ThrowError("ttf couldn't initialize: ", TTF_GetError());
+			initializedText = true;
 			font = TTF_OpenFont(fontPath, defaultTextSize);
 			if (!font) ThrowError(4, "couldn't load font at path ", fontPath, "error: ", TTF_GetError());
 		}
 		surface = TTF_RenderText_Solid_Wrapped(font, data->text.c_str(), SDL_Color(), 0);
 		texture = SDL_CreateTextureFromSurface(Main::renderer, surface);
 	}
+	void Init(const TextData* data) {
+		Init(const_cast<TextData *>(data));
+	}
 public:
 	Text(){}
 	Text(TextData* data) {
 		Init(data);
+	}
+	Text(const TextData* data) {
+		Init(data);
+	}
+	inline void SetPosition(IntVec2 position) {
+		position.IntoRectXY(rect);
 	}
 	virtual ~Text() {
 		SDL_FreeSurface(surface);
 		SDL_DestroyTexture(texture);
 		delete rect;
 		if (!bIsPauseText) {
-			Main::Updates -= updateNode;
+			Main::dtUpdates -= lateUpdateNode.deltaTimeUpd;
 			return;
 		}
-		Main::PauseUpdates -= updateNode;
+		Main::PauseUpdates -= lateUpdateNode.regularUpd;
 	}
 	void RenderText(void);
 private:
 	static void Finalize(void);
 protected:
-	virtual void Update(void);
+	virtual void LateUpdate(void);
 };
 class Item : public Text {
 public:
@@ -115,12 +137,12 @@ protected:
 	inline void SetOnSelect(std::function<void(void)> selectFunc) {
 		onSelect = selectFunc;
 	}
-	void Update(void) override;
+	void LateUpdate(void) override;
 public:
 	static void StaticInit(void);
 	static void MakeRandItem(int);
 	Item(int index, const char *path, const char* message, IntVec2 ItemImgSize) {
-		SetUpdateNode(Main::PauseUpdates += [this]() {Update(); });
+		SetLateUpdateNode(Main::PauseUpdates += [this]() {LateUpdate(); });
 		itemIndex = index;
 		selectedItem = -1;
 		firstItem = !index;
@@ -129,7 +151,8 @@ public:
 #ifdef DEBUG_BUILD
 		if (!ItemImg.GetTexture()) ThrowError("couldn't load item with file path \"", path, "\"");
 #endif
-		auto data = Text::TextData(IntVec2::GetOne() * Item::itemTextSize, static_cast<FVector2>(pos), message, true);
+		//final bool arg is to make sure we aren't subscribing the late update in two different places.
+		auto data = Text::TextData(IntVec2::GetOne() * Item::itemTextSize, static_cast<FVector2>(pos), message, true, false);
 		Init(&data);
 	}
 	virtual ~Item() {
@@ -166,7 +189,7 @@ public:
 };
 class EnemyTurner final : public Item {
 private:
-	void Update(void) override;
+	void LateUpdate(void) override;
 	static const std::string startPath;
 	static const char *endPath;
 	static const std::string fullPath;
@@ -180,7 +203,7 @@ public:
 };
 class Poison final : public Item {
 private:
-	void Update(void) override;
+	void LateUpdate(void) override;
 	static const std::string startPath;
 	static const char *endPath;
 	static const std::string fullPath;

@@ -1,5 +1,4 @@
 #include "enemy.hpp"
-#include "multicast delegates.hpp"
 #include "player.hpp"
 #include "EnemySpawner.hpp"
 //temp
@@ -64,10 +63,10 @@ void Enemy::EnactDamage(void) {
     closestEnemyBehav->TakeDamage(selfDamage);
 }
 void Enemy::LateUpdate(void) {
-    for (auto& texRect : debuffTexes) {
-        auto& confusedTex = texRect.second.texture;
-        if (entity) Physics::SetRealPos(confusedTex.GetRectAddr(), entity, GetPosition() + static_cast<FVector2>(GetDebuffPos(texRect.second.index)), false);
-        Textures::RenderStandaloneTex(confusedTex);
+    for (auto& debuff : debuffTexes) {
+        auto& debufTex = debuff.second.texture;
+        if (entity) Physics::SetRealPos(debufTex.GetRectAddr(), entity, GetPosition() + static_cast<FVector2>(GetDebuffPos(debuff.second.index)), false);
+        Textures::RenderStandaloneTex(debufTex);
     }
 }
 //don't call this directly. call OnDamaged() instead
@@ -87,13 +86,13 @@ void Enemy::AddDebuffTex(int debuff) {
 #endif
     debuffTexes.emplace(debuff, Debuff(Textures::TextureRect(Textures::InitAnim(debuffPaths.at(debuff)), SDL_Rect{ debuffPos.x, debuffPos.y, debuffSize.x, debuffSize.y }), debuffTexSize));
 }
-void Enemy::OnDamaged(float damageAmount, FVector2 velocityChange) {
+void Enemy::OnDamaged(float damageAmount, FVector2 knockbackForce) {
     if (entity && entity->GetCurAnim() == hurt && !entity->AnimFinished()) return;
 #ifdef DEBUG_BUILD
     if (!derivedTakeDamage) ThrowError("derivedTakeDamage of enemy base class has not been assigned in the derived class. please assign it to the base function of TakeDamage(float).");
 #endif
     derivedTakeDamage(damageAmount);
-    rb->AddForce(velocityChange);
+    rb->AddForce(knockbackForce);
 }
 void Enemy::CollisionCallback(Collision* collision) {
     if (!enabled) return;
@@ -161,8 +160,7 @@ void Enemy::Update(void) {
         EnemySpawner::closestEnemy = this;
     }
     if (isSingleEnemy && GetDebuffActive(confused)) {
-        Main::LateUpdates -= lateUpdateNode;
-        lateUpdateNode = nullptr;
+        UnsubscribeLateUpdate();
         SetDebuffActive(confused, false);
     }
     if (GetDebuffActive(confused)) {
