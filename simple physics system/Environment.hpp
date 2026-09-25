@@ -9,7 +9,7 @@ private:
 	//number of trees on screen at any given time
 	static constexpr int numTrees = 10;
 	static constexpr float shopScale = 2.f;
-	static constexpr float shop_time = 60.f;
+	static constexpr float shop_time = 15.f;
 	static constexpr bool spawn_shop_at_start = true;
 	static constexpr FVector2 treeSize = FVector2(110.f, 110.f);
 	static constexpr FVector2 shopSize = FVector2(191.f * shopScale, 183.f * shopScale);

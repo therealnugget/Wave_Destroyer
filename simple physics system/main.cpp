@@ -1,5 +1,5 @@
-//#define IS_WINDOW
-#ifdef IS_WINDOW
+//#define IS_WINDOWS
+#ifdef IS_WINDOWS
 #include <Windows.h>
 #endif
 #include "debug.hpp"

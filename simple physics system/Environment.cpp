@@ -24,7 +24,11 @@ void Environment::OnShopDestroy(void) {
 void Environment::Update(void) {
 	if (shopTimer.GetElapsedSeconds() > shop_time) {
 		shopTimer.Reset();
-		if (!shop) shop = new Shop();
+		if (shop) {
+			//shop assigned to nullptr in destructor
+			delete shop;
+		}
+		shop = new Shop();
 	}
 	if (shop) shop->Update();
 }

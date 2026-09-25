@@ -29,17 +29,21 @@ public:
 	struct TextData {
 	private:
 		IntVec2 size;
-		std::string text;
+		char* text;
 		bool bIsPauseText;
 		bool bSubLateUpdate;
+		SDL_Color color;
 	public:
 		IntVec2 position;
 		TextData(){}
-		TextData(IntVec2 _size, IntVec2 startPos, std::string textDisplay, bool isPauseText = false, bool subLateUpdate = true) : size(_size), position(startPos), text(textDisplay), bIsPauseText(isPauseText), bSubLateUpdate(subLateUpdate) {
-
+		TextData(IntVec2 _size, IntVec2 startPos, std::string textDisplay, bool isPauseText = false, bool subLateUpdate = true, const SDL_Color _color = SDL_Color()) : size(_size), position(startPos), bIsPauseText(isPauseText), bSubLateUpdate(subLateUpdate), color(_color) {
+			text = new char[textDisplay.length()];
+			strcpy(text, textDisplay.c_str());
 		}
 		inline void SetText(std::string newText) {
-			text = newText;
+			delete text;
+			text = new char[newText.length()];
+			strcpy(text, newText.c_str());
 		}
 		friend class Text;
 	};
@@ -70,7 +74,7 @@ protected:
 			font = TTF_OpenFont(fontPath, defaultTextSize);
 			if (!font) ThrowError(4, "couldn't load font at path ", fontPath, "error: ", TTF_GetError());
 		}
-		surface = TTF_RenderText_Solid_Wrapped(font, data->text.c_str(), SDL_Color(), 0);
+		surface = TTF_RenderText_Solid_Wrapped(font, data->text.c_str(), data->color, 0);
 		texture = SDL_CreateTextureFromSurface(Main::renderer, surface);
 	}
 	void Init(const TextData* data) {
@@ -88,6 +92,7 @@ public:
 		position.IntoRectXY(rect);
 	}
 	virtual ~Text() {
+		delete //TODO: finish fixing text stuff
 		SDL_FreeSurface(surface);
 		SDL_DestroyTexture(texture);
 		delete rect;
