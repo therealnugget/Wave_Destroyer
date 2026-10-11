@@ -14,6 +14,7 @@ private:
 	static TTF_Font* font;
 	static constexpr int defaultTextSize = 100;
 	static constexpr const char* fontPath = "fonts/Pixie.ttf";
+	static constexpr SDL_Point pointOfRotation = {};
 	static bool initializedText;
 	SDL_Surface *surface;
 	SDL_Texture *texture;
@@ -24,26 +25,23 @@ private:
 	};
 	UpdateNodeUnion lateUpdateNode;
 	bool bIsPauseText;
-	static constexpr SDL_Point pointOfRotation = {};
+	char* text;
 public:
 	struct TextData {
 	private:
 		IntVec2 size;
-		char* text;
 		bool bIsPauseText;
 		bool bSubLateUpdate;
 		SDL_Color color;
+		std::string text;
 	public:
 		IntVec2 position;
 		TextData(){}
-		TextData(IntVec2 _size, IntVec2 startPos, std::string textDisplay, bool isPauseText = false, bool subLateUpdate = true, const SDL_Color _color = SDL_Color()) : size(_size), position(startPos), bIsPauseText(isPauseText), bSubLateUpdate(subLateUpdate), color(_color) {
-			text = new char[textDisplay.length()];
-			strcpy(text, textDisplay.c_str());
+		TextData(IntVec2 _size, IntVec2 startPos, std::string textDisplay, bool isPauseText = false, bool subLateUpdate = true, const SDL_Color _color = SDL_Color()) : size(_size), position(startPos), bIsPauseText(isPauseText), bSubLateUpdate(subLateUpdate), color(_color), text(textDisplay) {
+
 		}
 		inline void SetText(std::string newText) {
-			delete text;
-			text = new char[newText.length()];
-			strcpy(text, newText.c_str());
+			text = newText;
 		}
 		friend class Text;
 	};
@@ -74,7 +72,9 @@ protected:
 			font = TTF_OpenFont(fontPath, defaultTextSize);
 			if (!font) ThrowError(4, "couldn't load font at path ", fontPath, "error: ", TTF_GetError());
 		}
-		surface = TTF_RenderText_Solid_Wrapped(font, data->text.c_str(), data->color, 0);
+		text = new char[data->text.length() + 1];
+		strcpy(text, data->text.c_str());
+		surface = TTF_RenderText_Solid_Wrapped(font, text, data->color, 0);
 		texture = SDL_CreateTextureFromSurface(Main::renderer, surface);
 	}
 	void Init(const TextData* data) {
@@ -92,7 +92,7 @@ public:
 		position.IntoRectXY(rect);
 	}
 	virtual ~Text() {
-		delete //TODO: finish fixing text stuff
+		delete text;
 		SDL_FreeSurface(surface);
 		SDL_DestroyTexture(texture);
 		delete rect;

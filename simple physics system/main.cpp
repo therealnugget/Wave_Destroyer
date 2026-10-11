@@ -344,8 +344,8 @@ int main(int argc, char* args[])
         if (Main::IsPaused()) {
             Main::RegisterInput();
             if (Main::canChangePause) Main::CheckPauseState();
-            Main::PauseUpdates();
             Physics::PauseUpdate(Main::DefCapDeltaTime());
+            Main::PauseUpdates();
         pause_screen:
             Main::ClearInput();
             goto end_of_frame;

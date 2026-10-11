@@ -1052,7 +1052,7 @@ public:
 	static Node<RigidBody*>* SubscribeEntity(const std::string& basePath, const std::vector<const char*>& animPaths, std::vector<FVector2> narrowPhaseVertices = Physics::DefaultSquareVerticesAsList, FVector2 startPos = FVector2::Zero, IntVec2 size = IntVec2::One, std::initializer_list<FVector2> _centreOfRot = std::initializer_list<FVector2>(), FVector2 _centreOfRotNPVert = FVector2::Zero, IntVec2 _renderOffset = IntVec2::Zero, int tag = -1, bool affectedByCam = true, std::function<void(Collision *)> collisionCallback = nullptr, std::unordered_map<std::string, std::variant<FVector2, FVector2*>> imageSizes = std::unordered_map<std::string, std::variant<FVector2, FVector2*>>(), std::unordered_map<std::string, bool> isGlobalSize = std::unordered_map<std::string, bool>(), FVector2 initVel = FVector2::Zero, float angle = .0f, float mass = 1.f, bool moveable = true, bool isTrigger = false, const std::initializer_list<const char*>& endPaths = std::initializer_list<const char*>());
 	static Node<RigidBody*>* SubscribeEntity(SubRBData *);
 	static Node<RigidBody*> *SubscribeEntity(RigidBody *);
-	static Node<Entity*>* SubStandaloneEnt(Entity*);
+	static Node<Entity*>* SubStandaloneEnt(Entity*, bool addAtTail = false);
 	static Node<Entity*>* SubStandaloneEnt(SubRBData *);
 	static Node<Entity*>* UnsubStandaloneEnt(Node<Entity*>*);
 	static void DeleteRB(rbList*);

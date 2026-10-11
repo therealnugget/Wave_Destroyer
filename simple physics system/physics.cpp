@@ -49,26 +49,41 @@ Node<RigidBody*> *Physics::SubscribeEntity (RigidBody *rb){
 	rb->entityIndex = totalNumEntities++;
 	return Node<RigidBody*>::AddAtHead(rb, &entityHead);
 }
-Node<Entity*>* Physics::SubStandaloneEnt(Entity* entity) {
+Node<Entity*>* Physics::SubStandaloneEnt(Entity* entity, bool addAtTail) {
+	auto entityHeadAddr = &standaloneEntityHead;
 	switch (entity->renderType) {
 	case Main::RenderType::normal:
-		return Node<Entity*>::AddAtHead(entity, &standaloneEntityHead);
+		break;
 	case Main::RenderType::renderUnder:
-		return Node<Entity*>::AddAtHead(entity, &standaloneEntityRenderUnderHead);
+		entityHeadAddr = &standaloneEntityRenderUnderHead;
+		break;
 	case Main::RenderType::renderWhenPaused:
-		return Node<Entity*>::AddAtHead(entity, &pausedEntityHead);
+		entityHeadAddr = &pausedEntityHead;
+		break;
+	default:
+		throw new exception("case not supported");
 	}
+	if (addAtTail) {
+		return Node<Entity*>::AddAtTail(entity, entityHeadAddr);
+	}
+	return Node<Entity*>::AddAtHead(entity, entityHeadAddr);
 }
 //deletes value of node
 Node<Entity*>* Physics::UnsubStandaloneEnt(Node<Entity*>* remove) {
+	auto entityHeadAddr = &standaloneEntityHead;
 	switch (remove->value->renderType) {
 	case Main::RenderType::normal:
-		return Node<Entity*>::RemoveWVal(&standaloneEntityHead, remove);
+		break;
 	case Main::RenderType::renderUnder:
-		return Node<Entity*>::RemoveWVal(&standaloneEntityRenderUnderHead, remove);
+		entityHeadAddr = &standaloneEntityRenderUnderHead;
+		break;
 	case Main::RenderType::renderWhenPaused:
-		return Node<Entity*>::RemoveWVal(&pausedEntityHead, remove);
+		entityHeadAddr = &pausedEntityHead;
+		break;
+	default:
+		throw new exception("case not supported");
 	}
+	return Node<Entity*>::RemoveWVal(entityHeadAddr, remove);
 }
 Node<Entity*>* Physics::SubStandaloneEnt(SubRBData *data) {
 	return SubStandaloneEnt(new Entity(data));
