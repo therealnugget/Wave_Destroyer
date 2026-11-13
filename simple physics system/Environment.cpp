@@ -22,15 +22,15 @@ void Environment::OnShopDestroy(void) {
 	shop = nullptr;
 }
 void Environment::Update(void) {
-	//if (shopTimer.GetElapsedSeconds() > shop_time) {
-	//	shopTimer.Reset();
-	//	if (shop) {
-	//		//shop assigned to nullptr in destructor
-	//		delete shop;
-	//	}
-	//	shop = new Shop();
-	//}
-	//if (shop) shop->Update();
+	if (shopTimer.GetElapsedSeconds() > shop_time) {
+		shopTimer.Reset();
+		if (shop) {
+			//shop assigned to nullptr in destructor
+			delete shop;
+		}
+		shop = new Shop();
+	}
+	if (shop) shop->Update();
 }
 void Environment::Init(void) {
 	shopTimer.Reset(shop_time * spawn_shop_at_start);

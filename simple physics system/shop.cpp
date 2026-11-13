@@ -1,16 +1,8 @@
 #include "shop.hpp"
 #include "Environment.hpp"
 #include "player.hpp"
-Text* Shop::promptText = nullptr;
-Text* Shop::shopTitle = nullptr;
-Text* Shop::tabText = nullptr;
-Text::TextData Shop::promptData;
-Text::TextData Shop::shopTitleData;
-Text::TextData Shop::tabData;
 const std::string Shop::shopTitleMessage = std::string("Shop");
-const std::string Shop::tabMessages[] = { std::string("buffs"), std::string("weapons"), std::string("armor"), std::string("items")};
-Node<std::function<void(void)>>* Shop::pauseUpdateNode = nullptr;
-std::string Shop::promptMessage = std::string();
+const std::string Shop::tabMessages[num_tabs] = { std::string("buffs"), std::string("weapons"), std::string("armor"), std::string("items")};
 const std::tuple<float, float, float> Shop::shopRenderDrawColor = { .0f, .0f, .0f };
 Text::TextData Shop::GetShopData(IntVec2 size, IntVec2 offset, std::string message) {
 	return Text::TextData(size, Main::halfDisplaySizeI + offset, message, true, true, shopFontColor);
@@ -26,6 +18,13 @@ Shop::Shop(void) {
 	promptData = Text::TextData(promptSize, Main::halfDisplaySizeI + promptOffset, promptMessage);
 	shopTitleData = GetShopData(shopTitleSize, shopTitleOffset, shopTitleMessage);
 	tabData = GetShopData(shopTabSize, shopTabOffset, tabMessages[0]);
+	tabText = nullptr;
+	shopTitle = nullptr;
+	promptText = nullptr;
+	backDropUINode = nullptr;
+	pauseUpdateNode = nullptr;
+	promptMessage = std::string();
+	currentTabIndex = 0;
 }
 void Shop::DestroyPrompt(void) {
 	if (!promptText) return;
@@ -54,8 +53,11 @@ void Shop::PauseUpdate(void) {
 		shopTitle = new Text(&shopTitleData);
 		//tabText = new Text(&tabData);
 		backDropUINode = GetShopUINode("UI/shop", { "shop UI" }, backDropOffset, backDropSize);
-		tabUINode = GetShopUINode("UI/shop", { "selected tab" }, shopTabOffset, shopTabSize);
+		tabUINode = GetShopUINode("UI/shop", { "selected tab" }, static_cast<IntVec2>(shopTabOffset), shopTabSize);
+		tabUIEnt = tabUINode->value;
 	}
+	currentTabIndex = std::clamp(currentTabIndex + Main::KeyPressed(SDL_SCANCODE_RIGHT) - Main::KeyPressed(SDL_SCANCODE_LEFT), 0, num_tabs);
+	tabUIEnt->SetRenderOffset(shopTabSize / 2 + shopTabOffset + IntVec2::GetRight() * shopTabDifference);
 	if (!GetShopKey()) return;
 	Main::SetPauseState(false);
 	delete this;

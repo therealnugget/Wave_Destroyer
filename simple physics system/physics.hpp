@@ -363,6 +363,12 @@ public:
 	ret:
 		return *this;
 	}
+	static inline const Vector2 Min(Vector2 a, Vector2 b) {
+		return Vector2(std::min(a.x, b.x), std::min(a.y, b.y));
+	}
+	static inline const Vector2 Max(Vector2 a, Vector2 b) {
+		return Vector2(std::max(a.x, b.x), std::max(a.y, b.y));
+	}
 	inline void IntoRectWH(SDL_Rect* rect) {
 		rect->w = x;
 		rect->h = y;
