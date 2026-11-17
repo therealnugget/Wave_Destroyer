@@ -54,6 +54,15 @@ selected:
 void Text::Finalize(void) {
 	TTF_CloseFont(font);
 }
+void ShopItem::OnPurchase(void) {
+	ThrowError("this function should not be called from the base class: instances of this class should derive from the \"ShopItem\" base class.");
+}
+void BloodSword::OnPurchase(void) {
+	puts("error: blood sword has not been implemented.");
+}
+void Coin::OnSelect(void) {
+	Player::AddCoins(numCoins);
+}
 void MaxHealthAdd::OnSelect(void) {
 	Player::IncreaseHealth(healthIncrease);
 	Player::ReplenishHealth();
@@ -100,6 +109,9 @@ void Item::MakeRandItem(int index) {
 		break;
 	case healthRegen:
 		new HealthRegenIncrease(index);
+		break;
+	case coin:
+		new Coin(index);
 		break;
 	case whirlPool:
 		new Insignia(index);

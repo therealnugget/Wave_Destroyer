@@ -77,10 +77,10 @@ public:
 		return Vector2(x / b.x, y / b.y);
 	}
 	inline Vector2 operator /(float b) {
-		return Vector2(x / b, y / b);
+		return Vector2(static_cast<float>(x) / b, static_cast<float>(y) / b);
 	}
 	inline FVector2 operator *(float b) {
-		return FVector2(x * b, y * b);
+		return FVector2(static_cast<float>(x) * b, static_cast<float>(y) * b);
 	}
 	inline static Vector2 constexpr ConstMult(const Vector2<float> &vec, float b) {
 		return Vector2(vec.x * b, vec.y * b);
@@ -323,6 +323,9 @@ public:
 	inline Vector2 operator *=(Vector2 b) {
 		return *this = *this * b;
 	}
+	inline Vector2 operator -=(Vector2 b) {
+		return *this = *this - b;
+	}
 	inline Vector2 operator *=(FVector2 b) {
 		return *this = static_cast<FVector2>(*this) * b;
 	}
@@ -362,6 +365,9 @@ public:
 		*this /= r;
 	ret:
 		return *this;
+	}
+	static inline const Vector2 Clamp(Vector2 x, Vector2 min, Vector2 max) {
+		return Vector2::Min(Vector2::Max(x, min), max);
 	}
 	static inline const Vector2 Min(Vector2 a, Vector2 b) {
 		return Vector2(std::min(a.x, b.x), std::min(a.y, b.y));

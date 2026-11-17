@@ -21,6 +21,7 @@ float Player::plrAttkET = .0f;
 float Player::maxHealth = 70.f;
 float Player::health = Player::maxHealth;
 float Player::regenRate = .0f;
+int Player::coins = 10;
 float Player::crystalColldierSizeMult = 1.4f;
 float Player::staminaDecreaseSpeed = 2500.f;
 float Player::staminaIncreaseSpeed = 12000.f;
@@ -111,8 +112,14 @@ void Player::TakeDamage(float damage) {
 	Main::canChangePause = false;
 	enabled = false;
 }
+void Player::AddCoins(int additionalCoins) {
+	coins += additionalCoins;
+}
 void Player::IncreaseHealth(float increaseFactor) {
 	maxHealth *= 1.f + increaseFactor;
+}
+void Player::UpgradeBaseSword(SDL_Color color, float damageMultiplier) {
+	puts("not implemented yet");
 }
 void Player::ReplenishHealth(void) {
 	health = maxHealth;

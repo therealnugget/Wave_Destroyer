@@ -18,6 +18,8 @@ private:
 	static bool initializedText;
 	SDL_Surface *surface;
 	SDL_Texture *texture;
+	SDL_Color color;
+	IntVec2 position;
 	SDL_Rect* rect;
 	typedef union UpdateNodeUnion {
 		Node<std::function<void(void)>> *regularUpd;
@@ -26,6 +28,20 @@ private:
 	UpdateNodeUnion lateUpdateNode;
 	bool bIsPauseText;
 	char* text;
+	inline void SetInternalSize(IntVec2 size) {
+		size.IntoRectWH(rect);
+		(position - size * .5f).IntoRectXY(rect);
+	}
+	inline void AllocateAndSetInternalText(const std::string& newText, SDL_Color newColor, IntVec2 newSize = IntVec2(-1, -1)) {
+		text = new char[newText.length() + 1];
+		strcpy(text, newText.c_str());
+		color = newColor;
+		if (newSize != IntVec2::GetOne() * -1) {
+			SetInternalSize(newSize);
+		}
+		surface = TTF_RenderText_Solid_Wrapped(font, text, color, 0);
+		texture = SDL_CreateTextureFromSurface(Main::renderer, surface);
+	}
 public:
 	struct TextData {
 	private:
@@ -63,19 +79,15 @@ protected:
 			if (bIsPauseText) SetLateUpdateNode(Main::PauseUpdates.AddAtTail([this]() {LateUpdate(); }));
 			else SetLateUpdateNode(Main::dtUpdates.AddAtTail([this](float _) {LateUpdate();}));
 		}
-		auto& size = data->size;
-		size.IntoRectWH(rect);
-		(data->position - size * .5f).IntoRectXY(rect);
+		position = data->position;
+		SetInternalSize(data->size);
 		if (!font) {
 			if (!initializedText && TTF_Init() == -1) ThrowError("ttf couldn't initialize: ", TTF_GetError());
 			initializedText = true;
 			font = TTF_OpenFont(fontPath, defaultTextSize);
 			if (!font) ThrowError(4, "couldn't load font at path ", fontPath, "error: ", TTF_GetError());
 		}
-		text = new char[data->text.length() + 1];
-		strcpy(text, data->text.c_str());
-		surface = TTF_RenderText_Solid_Wrapped(font, text, data->color, 0);
-		texture = SDL_CreateTextureFromSurface(Main::renderer, surface);
+		AllocateAndSetInternalText(data->text, data->color);
 	}
 	void Init(const TextData* data) {
 		Init(const_cast<TextData *>(data));
@@ -87,6 +99,12 @@ public:
 	}
 	Text(const TextData* data) {
 		Init(data);
+	}
+	inline void SetText(const std::string& newText, IntVec2 newSize = IntVec2(-1, -1)) {
+		delete text;
+		SDL_FreeSurface(surface);
+		SDL_DestroyTexture(texture);
+		AllocateAndSetInternalText(newText, color, newSize);
 	}
 	inline void SetPosition(IntVec2 position) {
 		position.IntoRectXY(rect);
@@ -131,6 +149,7 @@ private:
 		healthRegen,
 		whirlPool,
 		wrath,
+		coin,
 		numItemTypes,
 	};
 	//the number of times left that the item can spawn
@@ -165,12 +184,63 @@ public:
 	}
 	friend class Main;
 };
+class ShopItem {
+public:
+	ShopItem(int _price, const char *_name, const char* _path, const char* _message, IntVec2 _itemImgSize) : price(_price), name(_name), path(_path), itemImgSize(_itemImgSize) {
+		message = new char[strlen(_message) + 1];
+		strcpy(message, _message);
+	}
+protected:
+	virtual void OnPurchase(void);
+	inline void AppendMessage(const char* append) {
+		char* newMessage = new char[strlen(message) + strlen(append) + 1];
+		strcpy(newMessage, message);
+		strcat(newMessage, append);
+		delete message;
+		message = newMessage;
+	}
+private:
+	const inline char* GetTexPath(void) const {
+		return path;
+	}
+	const inline IntVec2 GetSize(void) const {
+		return itemImgSize;
+	}
+	int price;
+	const char* name;
+	const char* path;
+	char* message;
+	IntVec2 itemImgSize;
+	friend class Shop;
+};
+class BloodSword final : public ShopItem {
+	private:
+	void OnPurchase(void) override;
+	float damageIncrease;
+public:
+	BloodSword(int price = 10, float _damageIncrease = .3f) : damageIncrease(_damageIncrease), ShopItem(price, "blood sword", "blood sword", "upgrades base \ndamage by ", IntVec2(60, 60)) {
+		std::string percentDamage = std::to_string(roundf(damageIncrease * 100.f));
+		AppendMessage((percentDamage + "%.").c_str());
+	}
+};
 class MaxHealthAdd final : public Item {
 private:
 	void OnSelect(void);
 	float healthIncrease;
 public:
 	MaxHealthAdd(int index) : healthIncrease(.04f), Item(index, "main/heart/heart", "increase max\nhealth by 4%", IntVec2(11 * 4, 9 * 4)) {
+		SetOnSelect([this]() {OnSelect(); });
+	}
+};
+class Coin final : public Item {
+private:
+	void OnSelect(void);
+	int numCoins;
+	inline void SetCoins(int newNumCoins) {
+		numCoins = newNumCoins;
+	}
+public:
+	Coin(int index, int _numCoins = 20) : numCoins(_numCoins), Item(index, "main/coin/coin", "Gives player\n 20 coins", IntVec2(9 * 4, 9 * 4)) {
 		SetOnSelect([this]() {OnSelect(); });
 	}
 };

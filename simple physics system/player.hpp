@@ -45,6 +45,7 @@ private:
 	static float maxProgress;
 	static float progressIncreaseScale;
 	static float progressIncreaseAdd;
+	static int coins;
 	static bool mouseVertical;
 	static bool colOnFrame;
 	static bool enabled;
@@ -79,6 +80,9 @@ private:
 	static void PlayDirAnim(int animation = -1, IntVec2 = IntVec2(-1, 0));
 	typedef int (*limitFuncDel)(int, int);
 public:
+	static inline int GetCoins(void) {
+		return coins;
+	}
 	static inline float GetMaxHealth(void) {
 		return maxHealth;
 	}
@@ -115,6 +119,8 @@ public:
 	static void IncreasePickupRange(float);
 	static void IncreaseRegenRate(float);
 	static void IncreaseHealth(float);
+	static void AddCoins(int);
+	static void UpgradeBaseSword(SDL_Color, float damageMultiplier);
 	static void ReplenishHealth(void);
 	static void Init(void);
 	static void Finalize(void);
