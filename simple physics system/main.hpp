@@ -374,6 +374,7 @@ class MultiDelegate<void>;
 class Main {
 public:
 	static constexpr SDL_Color color_white = SDL_Color(255, 255, 255, 255);
+	static constexpr SDL_Color color_red = SDL_Color(255, 0, 0, 255);
 	typedef enum RenderType {
 		normal = 0,
 		renderUnder = 1,

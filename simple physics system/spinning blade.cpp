@@ -11,7 +11,7 @@ float SpinningBlade::toPlrScale = .65f;
 int SpinningBlade::bossChance = Enemy::GetDefaultBossChance();
 int SpinningBlade::numExplosions = 0;
 const float SpinningBlade::explosion_damage = Enemy::GetDefaultDamage() + add_explosion_damage;
-SpinningBlade::SpinningBlade(void) : explosionNode(nullptr), Enemy(SubRBData("spinning blade", Animations::MakeAnimStrs(numSpinAnims, idle, "idle", death, "death", hurt, "hit", attack, "attack"), FVector2(16.f / 12.f, 12.f / 16.f) * spinScale * Physics::GetDefaultSquareVertVec(), /*Main::halfDisplaySize + FVector2::GetRight() * 350.f*/Main::GetRandFVec(static_cast<FVector2>(Camera::GetCamExtentWorld(1.f)) - Main::halfDisplaySize * border, static_cast<FVector2>(Camera::GetCamExtentWorld(-1.f)) + Main::halfDisplaySize * border), spinSize, std::initializer_list<FVector2>(), FVector2::Zero, IntVec2(-spinSize.x * .5f, -spinSize.y * .5f), Main::Tag::enemy, true, [this](Collision* collision) { CollisionCallback(collision); }, std::unordered_map<std::string, std::variant<FVector2, FVector2*>>(), std::unordered_map<std::string, bool>(), FVector2::Zero, .0, 1.f, true, false, {"right"}, true, 32.f / 128.f * spinSize.x, Main::Layer::enemyLayer), IntVec2(7, -40), Enemy::GetDefaultMaxHealth() + 1.5f, Enemy::GetDefaultDamage(), Enemy::GetDefaultSelfDamage(), Enemy::GetDefaultSpeed() * spin_speed_mult, Enemy::GetDefaultNumColsOnFrame(), Enemy::GetIsBoss(bossChance)) {
+SpinningBlade::SpinningBlade(void) : explosionNode(nullptr), Enemy(SubRBData("spinning blade", Animations::MakeAnimStrs(numSpinAnims, idle, "idle", death, "death", hurt, "hit", attack, "attack"), FVector2(16.f / 12.f, 12.f / 16.f) * spinScale * Physics::GetDefaultSquareVertVec(), /*Main::halfDisplaySize + FVector2::GetRight() * 350.f*/Main::GetRandFVec(static_cast<FVector2>(Camera::GetCamExtentWorld(1.f)) - Main::halfDisplaySize * border, static_cast<FVector2>(Camera::GetCamExtentWorld(-1.f)) + Main::halfDisplaySize * border), spinSize, std::initializer_list<FVector2>(), FVector2::Zero, IntVec2(-spinSize.x * .5f, -spinSize.y * .5f), Main::Tag::enemy, true, [this](Collision* collision) { CollisionCallback(collision); }, std::unordered_map<std::string, std::variant<FVector2, FVector2*>>(), std::unordered_map<std::string, bool>(), FVector2::Zero, .0, 1.f, true, false, {"right"}, true, 32.f / 128.f * spinSize.x, Main::Layer::enemyLayer), IntVec2(7, -40), Enemy::GetDefaultMaxHealth() + 1.5f, Enemy::GetDefaultDamage() - .4f, Enemy::GetDefaultSelfDamage(), Enemy::GetDefaultSpeed() * spin_speed_mult, Enemy::GetDefaultNumColsOnFrame(), Enemy::GetIsBoss(bossChance)) {
     entity->SetAnimation(run);
     for (auto& anim : { hurt, death, idle }) {
         entity->SetNotLoop(anim);
@@ -80,7 +80,7 @@ void SpinningBlade::Update(void) {
     SetAnim(idle);
 ret:
     Move((toPlr * toPlrScale + toPlr.Perpendicular() * (1.f - toPlrScale)).Normalized());
-    toPlrScale -= toPlrScaleDecreaseSpd * Main::DeltaTime();
+    toPlrScale += toPlrScaleDecreaseSpd * Main::DeltaTime();
     touchingEnemy = false;
     if (!entity) return;
     entity->SetFlip(toPlr.x < .0f);

@@ -8,6 +8,10 @@ void Shop::InitShopData(TextUI *textUI, IntVec2 size, IntVec2 offset, std::strin
 	textUI->data = Text::TextData(size, Main::halfDisplaySizeI + offset, message, true, true, shopFontColor);
 }
 void Shop::CreateShopText(TextUI& textUI) {
+	auto& data = textUI.data;
+	data.SetIsPauseText(true);
+	data.SetSubLateUpdate(true);
+	data.SetColor(shopFontColor);
 	textUI.text = new Text(&textUI.data);
 }
 Shop::Shop(void) {
@@ -113,14 +117,17 @@ void Shop::PauseUpdate(void) {
 	if (keyPressHorizontal || initialUpdate) {
 		RenderItemPage();
 	}
-	/*static int temp4 = 0;
+//#define TEMP_CODE
+#ifdef TEMP_CODE
+	static int temp4 = 0;
 	temp4++;
-	if (itemUINode){
-		IntVec2 temp = IntVec2(-Main::KeyHeld(SDL_SCANCODE_J) + Main::KeyHeld(SDL_SCANCODE_L), Main::KeyHeld(SDL_SCANCODE_K) - Main::KeyHeld(SDL_SCANCODE_I));
-		static IntVec2 temp2 = IntVec2::Zero;
-		constexpr int temp3 = 4;
-		if ((temp4 & (temp3 - 1)) == 0) temp2 += temp;
-	}*/
+	IntVec2 temp = IntVec2(-Main::KeyHeld(SDL_SCANCODE_J) + Main::KeyHeld(SDL_SCANCODE_L), Main::KeyHeld(SDL_SCANCODE_K) - Main::KeyHeld(SDL_SCANCODE_I));
+	static IntVec2 temp2 = IntVec2::Zero;
+	constexpr int temp3 = 4;
+	if ((temp4 & (temp3 - 1)) == 0) temp2 += temp;
+	auto temp5 = confirmButtonText;
+	if (temp5.text) temp5.text->SetPosition(temp5.data.position + temp2);
+#endif
 	auto pressEnterOnFrame = Main::KeyPressed(SDL_SCANCODE_RETURN);
 	if (!itemUINode) {
 		if (pressEnterOnFrame) {
@@ -149,7 +156,7 @@ void Shop::PauseUpdate(void) {
 				}*/
 			}
 			SetHorizontalDifference(itemUIEnt, selectedItemOffset, selectedItemSize, selectedItemCellPos, itemDifference);
-			if (pressEnterOnFrame) {
+			if (pressEnterOnFrame && GetSelectedShopItem() != nullptr) {
 				itemUIEnt->SetSize(IntVec2::Zero);
 				buttonUINode = CreateShopUINode(shop_ui_path, { "selected button" }, static_cast<IntVec2>(selectedButtonOffset), buttonSize);
 				buttonUIEnt = buttonUINode->value;

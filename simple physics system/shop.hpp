@@ -74,7 +74,7 @@ private:
 	TextUI shopTitle = TextUI{
 		.data = Text::TextData(
 			IntVec2(270, 145),
-			IntVec2(-28 + ShopOffset.x, -388 + ShopOffset.y),
+			IntVec2(930 + ShopOffset.x, 155 + ShopOffset.y),
 			"Shop"
 			)
 	};
@@ -96,15 +96,14 @@ private:
 	TextUI confirmButtonText = TextUI{
 		.data = Text::TextData(
 			IntVec2(110, 45),
-			//IntVec2(105 + ShopOffset.x, 355 + ShopOffset.y),
-			IntVec2(331, 299),
+			IntVec2(1062 + ShopOffset.x, 896 + ShopOffset.y),
 			"Confirm"
 			)
 	};
 	TextUI cancelButtonText = TextUI{
 		.data = Text::TextData(
 			IntVec2(110, 45),
-			IntVec2(105 + ShopOffset.x, 355 + ShopOffset.y) - IntVec2::GetRight() * buttonDifference,
+			IntVec2(1062 + ShopOffset.x, 896 + ShopOffset.y) - IntVec2::GetRight() * buttonDifference,
 			"Cancel"
 		)
 	};

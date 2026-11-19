@@ -58,7 +58,7 @@ void ShopItem::OnPurchase(void) {
 	ThrowError("this function should not be called from the base class: instances of this class should derive from the \"ShopItem\" base class.");
 }
 void BloodSword::OnPurchase(void) {
-	puts("error: blood sword has not been implemented.");
+	Player::UpgradeBaseSword(Main::color_red, 1.f + damageIncrease);
 }
 void Coin::OnSelect(void) {
 	Player::AddCoins(numCoins);

@@ -515,6 +515,8 @@ void Physics::ProcessTexs(void) {
 			}
 		}
 	}
+	auto& currentColor = currentEntity->color;
+	SDL_SetTextureColorMod(currentEntity->texture, currentColor.r, currentColor.g, currentColor.b);
 	SDL_RenderCopyEx(Main::renderer, currentEntity->texture, nullptr, curRect, currentEntity->angle, currentEntity->centreOfRotation, currentEntity->flip);
 	if (!currentEntity || !currentEntity->bRecordAnim) return;
 	currentEntity->pastAnimation = currentEntity->currentAnimation;

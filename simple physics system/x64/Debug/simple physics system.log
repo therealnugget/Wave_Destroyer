@@ -1,346 +1,104 @@
-﻿  Environment.cpp
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(369,16): warning C4091: 'typedef ': ignored on left of 'AABB' when no variable is declared
-  (compiling source file 'Environment.cpp')
+﻿  ghost.cpp
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\main.hpp(369,16): warning C4091: 'typedef ': ignored on left of 'AABB' when no variable is declared
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(377,15): warning C4091: 'typedef ': ignored on left of 'Main::RenderType' when no variable is declared
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\main.hpp(378,15): warning C4091: 'typedef ': ignored on left of 'Main::RenderType' when no variable is declared
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(383,14): warning C4091: 'static ': ignored on left of 'Main::Layer' when no variable is declared
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\main.hpp(384,14): warning C4091: 'static ': ignored on left of 'Main::Layer' when no variable is declared
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(411,14): warning C4091: 'static ': ignored on left of 'Main::direction' when no variable is declared
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\main.hpp(412,14): warning C4091: 'static ': ignored on left of 'Main::direction' when no variable is declared
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(419,14): warning C4091: 'static ': ignored on left of 'Main::Tag' when no variable is declared
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\main.hpp(420,14): warning C4091: 'static ': ignored on left of 'Main::Tag' when no variable is declared
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(597,51): warning C4114: same type qualifier used more than once
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\main.hpp(598,51): warning C4114: same type qualifier used more than once
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(600,14): warning C4091: 'static ': ignored on left of 'Main::inpDirection' when no variable is declared
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\main.hpp(601,14): warning C4091: 'static ': ignored on left of 'Main::inpDirection' when no variable is declared
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(551,93): warning C4244: 'argument': conversion from 'const float' to 'Uint8', possible loss of data
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\main.hpp(552,93): warning C4244: 'argument': conversion from 'const float' to 'Uint8', possible loss of data
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(551,73): warning C4244: 'argument': conversion from 'const float' to 'Uint8', possible loss of data
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\main.hpp(552,73): warning C4244: 'argument': conversion from 'const float' to 'Uint8', possible loss of data
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(551,53): warning C4244: 'argument': conversion from 'const float' to 'Uint8', possible loss of data
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\main.hpp(552,53): warning C4244: 'argument': conversion from 'const float' to 'Uint8', possible loss of data
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(276,15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\physics.hpp(276,15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(276,23): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\physics.hpp(276,23): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(356,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\physics.hpp(356,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(360,18): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\physics.hpp(360,18): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(365,12): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\physics.hpp(365,12): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(679,15): warning C4099: 'RigidBody': type name first seen using 'struct' now seen using 'class'
-  (compiling source file 'Environment.cpp')
-      C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\usefulTypedefs.hpp(8,8):
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\physics.hpp(681,15): warning C4099: 'RigidBody': type name first seen using 'struct' now seen using 'class'
+  (compiling source file 'ghost.cpp')
+      C:\Users\drago\source\repos\top-down-wave-game\simple physics system\usefulTypedefs.hpp(8,8):
       see declaration of 'RigidBody'
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(534,3): warning C5033: 'register' is no longer a supported storage class
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\physics.hpp(536,3): warning C5033: 'register' is no longer a supported storage class
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(541,5): warning C5033: 'register' is no longer a supported storage class
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\physics.hpp(543,5): warning C5033: 'register' is no longer a supported storage class
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(681,16): warning C4091: 'typedef ': ignored on left of 'AABB' when no variable is declared
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\physics.hpp(683,16): warning C4091: 'typedef ': ignored on left of 'AABB' when no variable is declared
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(708,15): warning C4091: 'typedef ': ignored on left of 'QuadNode<T>::TypeOfNode' when no variable is declared
-  (compiling source file 'Environment.cpp')
-      C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(708,15):
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\physics.hpp(710,15): warning C4091: 'typedef ': ignored on left of 'QuadNode<T>::TypeOfNode' when no variable is declared
+  (compiling source file 'ghost.cpp')
+      C:\Users\drago\source\repos\top-down-wave-game\simple physics system\physics.hpp(710,15):
       the template instantiation context (the oldest one first) is
-          C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(703,8):
+          C:\Users\drago\source\repos\top-down-wave-game\simple physics system\physics.hpp(705,8):
           while compiling class template 'QuadNode'
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(796,146): warning C4267: 'initializing': conversion from 'size_t' to 'const uint', possible loss of data
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\physics.hpp(798,146): warning C4267: 'initializing': conversion from 'size_t' to 'const uint', possible loss of data
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(863,21): warning C4018: '<': signed/unsigned mismatch
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\physics.hpp(865,21): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(881,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\physics.hpp(883,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(1166,102): warning C4305: 'initializing': truncation from 'double' to 'const float'
-  (compiling source file 'Environment.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\physics.hpp(1168,102): warning C4305: 'initializing': truncation from 'double' to 'const float'
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\player.hpp(133,14): warning C4091: 'static ': ignored on left of 'Player::PlrAnim' when no variable is declared
-  (compiling source file 'Environment.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\player.hpp(105,43): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'Environment.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\player.hpp(105,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'Environment.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\player.hpp(109,24): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'Environment.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\player.hpp(109,42): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'Environment.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\Item.hpp(24,16): warning C4091: 'typedef ': ignored on left of 'Text::UpdateNodeUnion' when no variable is declared
-  (compiling source file 'Environment.cpp')
-  
-  main.cpp
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(369,16): warning C4091: 'typedef ': ignored on left of 'AABB' when no variable is declared
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(377,15): warning C4091: 'typedef ': ignored on left of 'Main::RenderType' when no variable is declared
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(383,14): warning C4091: 'static ': ignored on left of 'Main::Layer' when no variable is declared
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(411,14): warning C4091: 'static ': ignored on left of 'Main::direction' when no variable is declared
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(419,14): warning C4091: 'static ': ignored on left of 'Main::Tag' when no variable is declared
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(597,51): warning C4114: same type qualifier used more than once
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(600,14): warning C4091: 'static ': ignored on left of 'Main::inpDirection' when no variable is declared
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(551,93): warning C4244: 'argument': conversion from 'const float' to 'Uint8', possible loss of data
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(551,73): warning C4244: 'argument': conversion from 'const float' to 'Uint8', possible loss of data
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(551,53): warning C4244: 'argument': conversion from 'const float' to 'Uint8', possible loss of data
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(276,15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(276,23): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(356,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(360,18): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(365,12): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(679,15): warning C4099: 'RigidBody': type name first seen using 'struct' now seen using 'class'
-  (compiling source file 'main.cpp')
-      C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\usefulTypedefs.hpp(8,8):
-      see declaration of 'RigidBody'
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(534,3): warning C5033: 'register' is no longer a supported storage class
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(541,5): warning C5033: 'register' is no longer a supported storage class
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(681,16): warning C4091: 'typedef ': ignored on left of 'AABB' when no variable is declared
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(708,15): warning C4091: 'typedef ': ignored on left of 'QuadNode<T>::TypeOfNode' when no variable is declared
-  (compiling source file 'main.cpp')
-      C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(708,15):
-      the template instantiation context (the oldest one first) is
-          C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(703,8):
-          while compiling class template 'QuadNode'
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(796,146): warning C4267: 'initializing': conversion from 'size_t' to 'const uint', possible loss of data
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(863,21): warning C4018: '<': signed/unsigned mismatch
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(881,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(1166,102): warning C4305: 'initializing': truncation from 'double' to 'const float'
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\player.hpp(133,14): warning C4091: 'static ': ignored on left of 'Player::PlrAnim' when no variable is declared
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\player.hpp(105,43): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\player.hpp(105,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\player.hpp(109,24): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\player.hpp(109,42): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\Item.hpp(24,16): warning C4091: 'typedef ': ignored on left of 'Text::UpdateNodeUnion' when no variable is declared
-  (compiling source file 'main.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\enemy.hpp(152,15): warning C4099: 'SubRBData': type name first seen using 'struct' now seen using 'class'
-  (compiling source file 'main.cpp')
-      C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(459,8):
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\enemy.hpp(152,15): warning C4099: 'SubRBData': type name first seen using 'struct' now seen using 'class'
+  (compiling source file 'ghost.cpp')
+      C:\Users\drago\source\repos\top-down-wave-game\simple physics system\physics.hpp(459,8):
       see declaration of 'SubRBData'
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.cpp(42,42): warning C4114: same type qualifier used more than once
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.cpp(160,5): warning C5033: 'register' is no longer a supported storage class
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.cpp(285,109): warning C4244: 'argument': conversion from 'const float' to 'Uint8', possible loss of data
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.cpp(285,79): warning C4244: 'argument': conversion from 'const float' to 'Uint8', possible loss of data
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.cpp(285,49): warning C4244: 'argument': conversion from 'const float' to 'Uint8', possible loss of data
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.cpp(316,40): warning C4244: 'argument': conversion from 'Uint64' to 'unsigned int', possible loss of data
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(34,36): warning C4244: 'initializing': conversion from 'int' to 'T', possible loss of data
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(34,36): warning C4244:         with
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(34,36): warning C4244:         [
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(34,36): warning C4244:             T=float
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(34,36): warning C4244:         ]
-  (compiling source file 'main.cpp')
-      C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(34,36):
-      the template instantiation context (the oldest one first) is
-          C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(29,8):
-          while compiling class template 'Vector2'
-          C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(74,23):
-          see reference to class template instantiation 'Vector2<float>' being compiled
-          C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(34,2):
-          while compiling class template member function 'Vector2<float>::Vector2(SDL_DisplayMode &)'
-              C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.cpp(270,17):
-              see the first reference to 'Vector2<float>::Vector2' in 'Main::Start'
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\player.hpp(128,14): warning C4091: 'static ': ignored on left of 'Player::PlrAnim' when no variable is declared
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(34,47): warning C4244: 'initializing': conversion from 'int' to 'T', possible loss of data
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(34,47): warning C4244:         with
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(34,47): warning C4244:         [
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(34,47): warning C4244:             T=float
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(34,47): warning C4244:         ]
-  (compiling source file 'main.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\player.hpp(100,43): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'ghost.cpp')
   
-  shop.cpp
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(369,16): warning C4091: 'typedef ': ignored on left of 'AABB' when no variable is declared
-  (compiling source file 'shop.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\player.hpp(100,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(377,15): warning C4091: 'typedef ': ignored on left of 'Main::RenderType' when no variable is declared
-  (compiling source file 'shop.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\player.hpp(104,24): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(383,14): warning C4091: 'static ': ignored on left of 'Main::Layer' when no variable is declared
-  (compiling source file 'shop.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\player.hpp(104,42): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(411,14): warning C4091: 'static ': ignored on left of 'Main::direction' when no variable is declared
-  (compiling source file 'shop.cpp')
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\Item.hpp(24,16): warning C4091: 'typedef ': ignored on left of 'Text::UpdateNodeUnion' when no variable is declared
+  (compiling source file 'ghost.cpp')
   
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(419,14): warning C4091: 'static ': ignored on left of 'Main::Tag' when no variable is declared
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(597,51): warning C4114: same type qualifier used more than once
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(600,14): warning C4091: 'static ': ignored on left of 'Main::inpDirection' when no variable is declared
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(551,93): warning C4244: 'argument': conversion from 'const float' to 'Uint8', possible loss of data
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(551,73): warning C4244: 'argument': conversion from 'const float' to 'Uint8', possible loss of data
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(551,53): warning C4244: 'argument': conversion from 'const float' to 'Uint8', possible loss of data
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(276,15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(276,23): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(356,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(360,18): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(365,12): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(679,15): warning C4099: 'RigidBody': type name first seen using 'struct' now seen using 'class'
-  (compiling source file 'shop.cpp')
-      C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\usefulTypedefs.hpp(8,8):
-      see declaration of 'RigidBody'
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(534,3): warning C5033: 'register' is no longer a supported storage class
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(541,5): warning C5033: 'register' is no longer a supported storage class
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(681,16): warning C4091: 'typedef ': ignored on left of 'AABB' when no variable is declared
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(708,15): warning C4091: 'typedef ': ignored on left of 'QuadNode<T>::TypeOfNode' when no variable is declared
-  (compiling source file 'shop.cpp')
-      C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(708,15):
-      the template instantiation context (the oldest one first) is
-          C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(703,8):
-          while compiling class template 'QuadNode'
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(796,146): warning C4267: 'initializing': conversion from 'size_t' to 'const uint', possible loss of data
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(863,21): warning C4018: '<': signed/unsigned mismatch
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(881,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\physics.hpp(1166,102): warning C4305: 'initializing': truncation from 'double' to 'const float'
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\player.hpp(133,14): warning C4091: 'static ': ignored on left of 'Player::PlrAnim' when no variable is declared
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\player.hpp(105,43): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\player.hpp(105,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\player.hpp(109,24): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\player.hpp(109,42): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\Item.hpp(24,16): warning C4091: 'typedef ': ignored on left of 'Text::UpdateNodeUnion' when no variable is declared
-  (compiling source file 'shop.cpp')
-  
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\shop.cpp(87,180): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\shop.cpp(87,180): warning C4244:         with
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\shop.cpp(87,180): warning C4244:         [
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\shop.cpp(87,180): warning C4244:             T=float
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\shop.cpp(87,180): warning C4244:         ]
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\shop.cpp(87,177): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\shop.cpp(87,177): warning C4244:         with
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\shop.cpp(87,177): warning C4244:         [
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\shop.cpp(87,177): warning C4244:             T=float
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\shop.cpp(87,177): warning C4244:         ]
-  Generating Code...
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(132,1): warning C4172: returning address of local variable or temporary : preConstructedNode
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(145,1): warning C4172: returning address of local variable or temporary : preConstructedNode
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(145,1): warning C4172: returning address of local variable or temporary : preConstructedNode
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(149,1): warning C4172: returning address of local variable or temporary : preConstructedNode
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(149,1): warning C4172: returning address of local variable or temporary : preConstructedNode
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(132,1): warning C4172: returning address of local variable or temporary : preConstructedNode
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(132,1): warning C4172: returning address of local variable or temporary : preConstructedNode
-C:\Users\drago\source\repos\Wave_Destroyer\simple physics system\main.hpp(132,1): warning C4172: returning address of local variable or temporary : preConstructedNode
-  simple physics system.vcxproj -> C:\Users\drago\source\repos\Wave_Destroyer\x64\Debug\simple physics system.exe
+C:\Users\drago\source\repos\top-down-wave-game\simple physics system\main.hpp(132,1): warning C4172: returning address of local variable or temporary : preConstructedNode
+  simple physics system.vcxproj -> C:\Users\drago\source\repos\top-down-wave-game\x64\Debug\simple physics system.exe

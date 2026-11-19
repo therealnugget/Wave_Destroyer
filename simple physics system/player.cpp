@@ -69,8 +69,16 @@ float Player::progressIncreaseScale = 1.01f;
 float Player::progressIncreaseAdd = 35.f;
 float Player::progressAmount = .0f;
 float Player::projectileSpd = 600.f;
-float Player::damage = init_damage;
+float Player::initDamage =
+#ifdef IS_DEV
+1000.f
+#else
+1.f
+#endif
+;;
+float Player::damage = initDamage;
 float Player::spearDamageMultiplier = 2.5f;
+SDL_Color Player::mainAttackColor = SDL_Color(255, 255, 255, 255);
 Node<Entity*> *Player::healthbar;
 Entity* Player::healthBarEnt;
 Node<Entity*> *Player::progressBar;
@@ -119,7 +127,8 @@ void Player::IncreaseHealth(float increaseFactor) {
 	maxHealth *= 1.f + increaseFactor;
 }
 void Player::UpgradeBaseSword(SDL_Color color, float damageMultiplier) {
-	puts("not implemented yet");
+	initDamage = damageMultiplier;
+	mainAttackColor = color;
 }
 void Player::ReplenishHealth(void) {
 	health = maxHealth;
@@ -190,8 +199,8 @@ void Player::LateUpdate(void) {
 		if (!plrAttack) {
 			RigidBody* attackRB;
 			Entity* attackEnt;
-			plrAttack = CreatePlayerProjectile(!Main::leftClick ? spear_base_path : sword_base_path, !Main::leftClick ? spear_end_path : sword_end_path, plrAttkPos, spearSize * Main::rightClick + swordSize * Main::leftClick, &attackRB, &attackEnt, mouseDiff.Angle());
-			damage = init_damage * spearDamageMultiplier * !Main::leftClick + init_damage * Main::leftClick;
+			plrAttack = CreatePlayerProjectile(!Main::leftClick ? spear_base_path : sword_base_path, !Main::leftClick ? spear_end_path : sword_end_path, plrAttkPos, spearSize * Main::rightClick + swordSize * Main::leftClick, &attackRB, &attackEnt, mouseDiff.Angle(), mainAttackColor);
+			damage = initDamage * spearDamageMultiplier * !Main::leftClick + initDamage * Main::leftClick;
 			attackEnt->SetNotLoop(attkSlashAnim);
 			attackRB->SetFricCoef(.0f);
 			attackEnt->SetAnimSpd(attackSlashAnimSpeed);
@@ -208,8 +217,8 @@ void Player::LateUpdate(void) {
 		return;
 	}
 }
-rbList *Player::CreatePlayerProjectile(std::string basePath, const char* endPath, IntVec2 position, IntVec2 size, RigidBody **outRB, Entity ** outEnt, float rotation) {
-	auto data = SubRBData(basePath, { endPath }, Physics::DefaultSquareVerticesVec, position, size, std::initializer_list<FVector2>(), FVector2::Zero, size * -.5f, Main::Tag::playerAttack, true, nullptr, std::unordered_map<std::string, std::variant<FVector2, FVector2*>>(), std::unordered_map<std::string, bool>(), FVector2::Zero, rotation, 1.f, true, true, { Main::empty_cc });
+rbList *Player::CreatePlayerProjectile(std::string basePath, const char* endPath, IntVec2 position, IntVec2 size, RigidBody **outRB, Entity ** outEnt, float rotation, SDL_Color color) {
+	auto data = SubRBData(basePath, { endPath }, Physics::DefaultSquareVerticesVec, position, size, std::initializer_list<FVector2>(), FVector2::Zero, size * -.5f, Main::Tag::playerAttack, true, nullptr, std::unordered_map<std::string, std::variant<FVector2, FVector2*>>(), std::unordered_map<std::string, bool>(), FVector2::Zero, rotation, 1.f, true, true, { Main::empty_cc }, true, .0f, Main::Layer::playerProjLayer, false, Main::normal, color);
 	auto node = Physics::SubscribeEntity(&data);
 	if (outRB) *outRB = node->value;
 	if (outEnt) {

@@ -59,6 +59,15 @@ public:
 		inline void SetText(std::string newText) {
 			text = newText;
 		}
+		inline void SetIsPauseText(bool value) {
+			bIsPauseText = value;
+		}
+		inline void SetSubLateUpdate(bool value) {
+			bSubLateUpdate = value;
+		}
+		inline void SetColor(SDL_Color newColor) {
+			color = newColor;
+		}
 		friend class Text;
 	};
 protected:

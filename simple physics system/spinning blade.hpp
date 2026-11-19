@@ -12,7 +12,7 @@ private:
 	static constexpr IntVec2 explosionSize = { 160, 160 };
 	static constexpr float explosionColliderScale = 80.f;
 	static constexpr float add_explosion_damage = 3.f;
-	static constexpr float toPlrScaleDecreaseSpd = .02f;
+	static constexpr float toPlrScaleDecreaseSpd = .01f;
 	static constexpr float spin_speed_mult = 2.f;
 	static const float explosion_damage;
 	void TakeDamage(float damageAmount) override;

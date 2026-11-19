@@ -14,13 +14,6 @@ private:
 	static constexpr float immuneTime = .13f;
 	static constexpr float initSpeed = 650.f;
 	static constexpr float sprint_cooldown_time = .4f;
-	static constexpr float init_damage =
-#ifdef IS_DEV
-		1000.f
-#else
-		1.f
-#endif
-		;
 	static const std::string sword_base_path;
 	static const std::string spear_base_path;
 	static constexpr const char* spear_end_path = "spear";
@@ -45,6 +38,7 @@ private:
 	static float maxProgress;
 	static float progressIncreaseScale;
 	static float progressIncreaseAdd;
+	static float initDamage;
 	static int coins;
 	static bool mouseVertical;
 	static bool colOnFrame;
@@ -77,6 +71,7 @@ private:
 	static IntVec2 pastInp;
 	static IntVec2 swordSize, spearSize;
 	static IntVec2 plrAttkPos;
+	static SDL_Color mainAttackColor;
 	static void PlayDirAnim(int animation = -1, IntVec2 = IntVec2(-1, 0));
 	typedef int (*limitFuncDel)(int, int);
 public:
@@ -90,7 +85,7 @@ public:
 		return damage;
 	}
 	static IntVec2 GetProjectilePos(float, FVector2);
-	static rbList *CreatePlayerProjectile(std::string basePath, const char *endPath, IntVec2 position, IntVec2 size, RigidBody ** outRb = nullptr, Entity ** outEnt = nullptr, float rotation = .0f);
+	static rbList *CreatePlayerProjectile(std::string basePath, const char *endPath, IntVec2 position, IntVec2 size, RigidBody ** outRb = nullptr, Entity ** outEnt = nullptr, float rotation = .0f, SDL_Color color = SDL_Color(255, 255, 255, 255));
 	static inline float GetHealthFrac(void) {
 		return health / maxHealth;
 	}
