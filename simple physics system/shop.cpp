@@ -30,7 +30,6 @@ Shop::Shop(void) {
 		shopItems[i] = new shopItemBucket[num_shop_items]();
 	}
 	shopItems[0][0] = new BloodSword();
-	shopItems[0][11] = new BloodSword(20);
 	currentButtonIndex = 1;
 	selectedItemCellPos = IntVec2::Zero;
 }
@@ -88,15 +87,18 @@ void Shop::RenderItemPage(void) {
 		shopItemNodes[i] = CreateShopUINode(item_icons_path, { currentItem->GetTexPath() }, static_cast<FVector2>(firstItemOffset) + static_cast<FVector2>(itemDifference) * FVector2(x, y), currentItem->GetSize());
 	}
 }
+ShopItem *Shop::GetSelectedShopItem(void) {
+	return shopItems[currentTabIndex][selectedItemCellPos.x + selectedItemCellPos.y * num_item_col];
+}
 void Shop::PauseUpdate(void) {
 	bool initialUpdate = !backDropUINode;
 	if (initialUpdate) {
+		backDropUINode = CreateShopUINode(shop_ui_path, { "shop UI" }, backDropOffset, backDropSize);
+		tabUINode = CreateShopUINode(shop_ui_path, { "selected tab" }, static_cast<IntVec2>(shopTabOffset), shopTabSize);
 		CreateShopText(shopTitle);
 		CreateShopText(tabText);
 		CreateShopText(confirmButtonText);
 		CreateShopText(cancelButtonText);
-		backDropUINode = CreateShopUINode(shop_ui_path, { "shop UI" }, backDropOffset, backDropSize);
-		tabUINode = CreateShopUINode(shop_ui_path, { "selected tab" }, static_cast<IntVec2>(shopTabOffset), shopTabSize);
 		tabUIEnt = tabUINode->value;
 	}
 	auto keyPressHorizontal = Main::KeyPressed(SDL_SCANCODE_RIGHT) - Main::KeyPressed(SDL_SCANCODE_LEFT);
@@ -132,6 +134,19 @@ void Shop::PauseUpdate(void) {
 		if (!buttonUINode) {
 			if (keyPressHorizontal || keyPressVertical) {
 				selectedItemCellPos = IntVec2::Clamp(selectedItemCellPos + IntVec2(keyPressHorizontal, keyPressVertical), IntVec2::Zero, IntVec2(num_item_col, num_item_row) - IntVec2::GetOne());
+				/*auto selectedItem = GetSelectedShopItem();
+				auto selectedName = selectedItem->GetName();
+				auto selectedDesc = selectedItem->GetDescription();
+				if (!itemNameText.text) {
+					itemNameText.data.SetText(selectedName);
+					itemDescText.data.SetText(selectedDesc);
+					CreateShopText(itemNameText);
+					CreateShopText(itemDescText);
+				}
+				else {
+					itemNameText.text->SetText(selectedName);
+					itemDescText.text->SetText(selectedDesc);
+				}*/
 			}
 			SetHorizontalDifference(itemUIEnt, selectedItemOffset, selectedItemSize, selectedItemCellPos, itemDifference);
 			if (pressEnterOnFrame) {
@@ -147,7 +162,7 @@ void Shop::PauseUpdate(void) {
 			SetButtonDifference();
 			if (pressEnterOnFrame) {
 				if (currentButtonIndex == confirm_button_index) {
-					auto currentShopItem = shopItems[currentTabIndex][selectedItemCellPos.x + selectedItemCellPos.y * num_item_col];
+					auto currentShopItem = GetSelectedShopItem();
 					if (Player::GetCoins() >= currentShopItem->price) {
 						currentShopItem->OnPurchase();
 						goto resume;

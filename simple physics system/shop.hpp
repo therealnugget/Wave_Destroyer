@@ -59,6 +59,7 @@ private:
 		Text::TextData data;
 		Text* text = nullptr;
 	};
+	ShopItem* GetSelectedShopItem(void);
 	void InitShopData(TextUI *textUI, IntVec2 size, IntVec2 offset, std::string message);
 	void CreateShopText(TextUI &textUI);
 	Node<Entity *> *CreateShopUINode(const char *, CCList, FVector2 offset, IntVec2 size);
@@ -77,11 +78,26 @@ private:
 			"Shop"
 			)
 	};
+	TextUI itemNameText = TextUI{
+		.data = Text::TextData(
+			IntVec2(270, 145),
+			IntVec2(-28 + ShopOffset.x, -388 + ShopOffset.y),
+			"broken"
+			)
+	};
+	TextUI itemDescText = TextUI{
+		.data = Text::TextData(
+			IntVec2(270, 145),
+			IntVec2(-28 + ShopOffset.x, -388 + ShopOffset.y),
+			"broken"
+			)
+	};
 	TextUI tabText;
 	TextUI confirmButtonText = TextUI{
 		.data = Text::TextData(
 			IntVec2(110, 45),
-			IntVec2(105 + ShopOffset.x, 355 + ShopOffset.y),
+			//IntVec2(105 + ShopOffset.x, 355 + ShopOffset.y),
+			IntVec2(331, 299),
 			"Confirm"
 			)
 	};
@@ -95,10 +111,6 @@ private:
 	static constexpr FVector2 ShopOffset = FVector2(-351.f, .0f);
 	static constexpr IntVec2 promptSize = IntVec2(315, 40);
 	static constexpr IntVec2 promptOffset = IntVec2(-10, -35);
-	static constexpr IntVec2 itemNameSize = IntVec2(270, 145);
-	static constexpr IntVec2 itemDescSize = IntVec2(270, 145);
-	static constexpr IntVec2 itemNameOffset = IntVec2(-28 + ShopOffset.x, -388 + ShopOffset.y);
-	static constexpr IntVec2 itemDescOffset = IntVec2(-28 + ShopOffset.x, -388 + ShopOffset.y);
 	static constexpr IntVec2 shopTabOffset = IntVec2(-191.f + ShopOffset.x, -271.99f + ShopOffset.y);
 	static constexpr IntVec2 selectedButtonOffset = IntVec2(-133.f + ShopOffset.x, 306.f + ShopOffset.y);
 	static constexpr IntVec2 selectedItemOffset = IntVec2(-249.f + ShopOffset.x, -136.f + ShopOffset.y);

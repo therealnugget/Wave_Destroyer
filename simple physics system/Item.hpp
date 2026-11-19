@@ -186,18 +186,24 @@ public:
 };
 class ShopItem {
 public:
-	ShopItem(int _price, const char *_name, const char* _path, const char* _message, IntVec2 _itemImgSize) : price(_price), name(_name), path(_path), itemImgSize(_itemImgSize) {
-		message = new char[strlen(_message) + 1];
-		strcpy(message, _message);
+	ShopItem(int _price, const char *_name, const char* _path, const char* _description, IntVec2 _itemImgSize) : price(_price), name(_name), path(_path), itemImgSize(_itemImgSize) {
+		description = new char[strlen(_description) + 1];
+		strcpy(description, _description);
+	}
+	const inline char* GetDescription(void) const {
+		return description;
+	}
+	const inline char* GetName(void) const {
+		return name;
 	}
 protected:
 	virtual void OnPurchase(void);
 	inline void AppendMessage(const char* append) {
-		char* newMessage = new char[strlen(message) + strlen(append) + 1];
-		strcpy(newMessage, message);
+		char* newMessage = new char[strlen(description) + strlen(append) + 1];
+		strcpy(newMessage, description);
 		strcat(newMessage, append);
-		delete message;
-		message = newMessage;
+		delete description;
+		description = newMessage;
 	}
 private:
 	const inline char* GetTexPath(void) const {
@@ -209,7 +215,7 @@ private:
 	int price;
 	const char* name;
 	const char* path;
-	char* message;
+	char* description;
 	IntVec2 itemImgSize;
 	friend class Shop;
 };
